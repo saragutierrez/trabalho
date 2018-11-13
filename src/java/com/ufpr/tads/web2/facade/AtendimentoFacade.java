@@ -25,6 +25,11 @@ public class AtendimentoFacade {
         Atendimento retorno = at.buscaAtendimento(id);
         return retorno;
     }
+    
+    public static void remove(int id) throws SQLException{
+        AtendimentoDao at = new AtendimentoDao();
+        at.remove(id);
+    }
 //    
 //    public static List<Atendimento> buscarAtendimentos(int id){
 //        AtendimentoDao at = new AtendimentoDao();

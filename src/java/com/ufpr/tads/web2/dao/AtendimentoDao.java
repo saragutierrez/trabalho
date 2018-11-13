@@ -86,6 +86,15 @@ public class AtendimentoDao {
 //            }
 //        }
 //    }
+    
+    public void remove(int id) throws SQLException {
+        Connection con = ConnectionFactory.getConnection();
+        PreparedStatement st;
+        st = con.prepareStatement("delete FROM trabalho.atendimento WHERE id_atendimento = ?");
+        st.setInt(1, id);
+        st.executeUpdate();
+    }
+    
     public List<Atendimento> buscarAtendimentosNaoResolvidos() throws SQLException {
         List<Atendimento> resultados = new ArrayList<>();
         Connection con = ConnectionFactory.getConnection();
