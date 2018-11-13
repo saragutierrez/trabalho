@@ -6,7 +6,6 @@
 package com.ufpr.tads.web2.servlets;
 
 import com.ufpr.tads.web2.beans.UsuarioBean;
-import com.ufpr.tads.web2.beans.Funcionario;
 import com.ufpr.tads.web2.facade.LoginFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
