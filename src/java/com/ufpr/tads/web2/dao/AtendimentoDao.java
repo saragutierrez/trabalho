@@ -289,7 +289,7 @@ public class AtendimentoDao {
                 a.setId_cliente(rs.getInt("id_cliente"));
                 a.setSituacao(rs.getString("situacao"));
                 a.setDescricao(rs.getString("descricao"));
-                a.setSolucao(rs.getString("descricao"));
+                a.setSolucao(rs.getString("solucao"));
                 a.setId_produto(rs.getInt("id_produto"));
                 a.setId_tipo_atendimento(rs.getInt("id_tipoAt"));
                 resultados.add(a);
@@ -319,23 +319,23 @@ public class AtendimentoDao {
         }
     }
 
-//    public Atendimento buscaAtendimento(int id_atendimento) throws SQLException {
-//        Connection con = new ConnectionFactory().getConnection();
-//        PreparedStatement st;
-//        Atendimento a = new Atendimento();
-//        st = con.prepareStatement("SELECT * FROM teste.tb_atendimento WHERE id_atendimento = ?");
-//        st.setInt(1, id_atendimento);
-//        ResultSet rs = st.executeQuery();
-//        if (rs.next()) {
-//            a.setId_atendimento(rs.getInt("id_atendimento"));
-//            a.setDt_hr_atendimento(rs.getTimestamp("dt_hr_atendimento"));
-//            a.setDsc_atendimento(rs.getString("dsc_atendimento"));
-//            a.setId_usuario(rs.getInt("id_usuario"));
-//            a.setId_cliente(rs.getInt("id_cliente"));
-//            a.setRes_atendimento(rs.getString("res_atendimento"));
-//            a.setId_produto(rs.getInt("id_produto"));
-//            a.setId_tipo_atendimento(rs.getInt("id_tipo_atendimento"));
-//        }
-//        return a;
-//    }
+    public Atendimento buscaAtendimento(int id_atendimento) throws SQLException {
+        Connection con = ConnectionFactory.getConnection();
+        PreparedStatement st;
+        Atendimento a = new Atendimento();
+        st = con.prepareStatement("SELECT * FROM trabalho.atendimento WHERE id_atendimento = ?");
+        st.setInt(1, id_atendimento);
+        ResultSet rs = st.executeQuery();
+        if (rs.next()) {
+                a.setId_atendimento(rs.getInt("id_atendimento"));
+                a.setDataHora(rs.getTimestamp("dataHora"));
+                a.setId_cliente(rs.getInt("id_cliente"));
+                a.setSituacao(rs.getString("situacao"));
+                a.setDescricao(rs.getString("descricao"));
+                a.setSolucao(rs.getString("solucao"));
+                a.setId_produto(rs.getInt("id_produto"));
+                a.setId_tipo_atendimento(rs.getInt("id_tipoAt"));
+        }
+        return a;
+    }
 }

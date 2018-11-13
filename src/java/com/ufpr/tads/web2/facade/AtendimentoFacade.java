@@ -20,11 +20,11 @@ import java.util.List;
  */
 public class AtendimentoFacade {
 
-//    public static Atendimento show(int id) throws SQLException{
-//        AtendimentoDao at = new AtendimentoDao();
-//        Atendimento retorno = at.buscaAtendimento(id);
-//        return retorno;
-//    }
+    public static Atendimento show(int id) throws SQLException{
+        AtendimentoDao at = new AtendimentoDao();
+        Atendimento retorno = at.buscaAtendimento(id);
+        return retorno;
+    }
 //    
 //    public static List<Atendimento> buscarAtendimentos(int id){
 //        AtendimentoDao at = new AtendimentoDao();
