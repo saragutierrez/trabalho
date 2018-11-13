@@ -34,7 +34,10 @@ TODO Tela de resolucao,Listagem de todos os atendimentos, cad de produto, cad de
                             <th scope="col">descricao</th>
                             <th scope="col">solucao</th>                            
                             <th scope="col">produtos</th>
-                                <c:if test= "${loginBean.tipo == 'F'}">
+                                <c:if test= "${loginBean.tipo != 'F'}">
+                                <th scope="col">x</th>
+                                </c:if>
+                                <c:if test= "${loginBean.tipo == 'C'}">
                                 <th scope="col">x</th>
                                 </c:if>
                         </tr>
@@ -54,7 +57,7 @@ TODO Tela de resolucao,Listagem de todos os atendimentos, cad de produto, cad de
                                 <c:choose>
                                     <c:when test =  "${loginBean.tipo == 'C'}">
                                         <c:if test= "${x.situacao == 'aberto'}">
-                                            <!--SEABERTO-->  <td><a href="ClientesServlet?action=remover&id=${x.id_atendimento}"><button class="btn btn-primary">remover</button></a></td>
+                                <!--SEABERTO-->  <td><a href="AtendimentoServlet?action=remover&id=${x.id_atendimento}"><button class="btn btn-primary">remover</button></a></td>
                                         </c:if>
                                     </c:when>
                                 </c:choose>
