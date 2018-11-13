@@ -53,10 +53,10 @@ public class ClientesServlet extends HttpServlet {
             throws ServletException, IOException, SQLException, ParseException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-           HttpSession session = request.getSession();
+            HttpSession session = request.getSession();
             UsuarioBean logB = (UsuarioBean) session.getAttribute("loginBean");
             String action = request.getParameter("action");
-             if (logB.getNome() == null || logB.getNome().isEmpty()) {
+            if (logB.getNome() == null || logB.getNome().isEmpty()) {
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
                 request.setAttribute("msg", "Usuário deve se autenticar para acessar o sistema");
                 rd.forward(request, response);
@@ -64,19 +64,19 @@ public class ClientesServlet extends HttpServlet {
                 if ((isNullOrEmpty(action)) || action.equals("list")) {
                     System.out.println(logB.getId());
                     List<Atendimento> atendimentos = AtendimentoFacade.listAtendimentosCli(logB.getId());
-                List<String> produtos = new ArrayList<>();
-                List<String> clientes = new ArrayList<>();
-                for (Atendimento a : atendimentos) {
-                    String p = AtendimentoFacade.buscarProduto(a.getId_produto()).getNome_produto();
-                    String c = UsuarioFacade.show(a.getId_cliente()).getNome();
-                    produtos.add(p);
-                    clientes.add(c);
-                }
-                request.setAttribute("atendimentos", atendimentos);//NaoResolvidos
-                request.setAttribute("produtos", produtos);
-                request.setAttribute("clientes", clientes);
+                    List<String> produtos = new ArrayList<>();
+                    List<String> clientes = new ArrayList<>();
+                    for (Atendimento a : atendimentos) {
+                        String p = AtendimentoFacade.buscarProduto(a.getId_produto()).getNome_produto();
+                        String c = UsuarioFacade.show(a.getId_cliente()).getNome();
+                        produtos.add(p);
+                        clientes.add(c);
+                    }
+                    request.setAttribute("atendimentos", atendimentos);//NaoResolvidos
+                    request.setAttribute("produtos", produtos);
+                    request.setAttribute("clientes", clientes);
                     request.setAttribute("atendimentos", AtendimentoFacade.listAtendimentosCli(logB.getId()));
-                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioCli.jsp");
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioFunc.jsp");
                     rd.forward(request, response);
 //                } else if (action.equals("show")) {
 //                    int id = Integer.parseInt(request.getParameter("id"));
@@ -169,30 +169,29 @@ public class ClientesServlet extends HttpServlet {
 //                    out.print("aff  " + action);
 //                }
 //            }
+                }
             }
         }
     }
-}
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-/**
- * Handles the HTTP <code>GET</code> method.
- *
- * @param request servlet request
- * @param response servlet response
- * @throws ServletException if a servlet-specific error occurs
- * @throws IOException if an I/O error occurs
- */
-@Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             processRequest(request, response);
-        
 
-} catch (SQLException | ParseException ex) {
+        } catch (SQLException | ParseException ex) {
             Logger.getLogger(ClientesServlet.class
-.getName()).log(Level.SEVERE, null, ex);
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -205,15 +204,14 @@ public class ClientesServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-        protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             processRequest(request, response);
-        
 
-} catch (SQLException | ParseException ex) {
+        } catch (SQLException | ParseException ex) {
             Logger.getLogger(ClientesServlet.class
-.getName()).log(Level.SEVERE, null, ex);
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -223,7 +221,7 @@ public class ClientesServlet extends HttpServlet {
      * @return a String containing servlet description
      */
     @Override
-        public String getServletInfo() {
+    public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 
