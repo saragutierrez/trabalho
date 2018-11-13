@@ -23,27 +23,30 @@
                     <thead>
                         <tr>
                             <th scope="col">data/hora</th>
-                            <th scope="col">Descricao</th>
-                            <th scope="col">CLIENTE</th>
-                            <th scope="col">Res Atendimento</th>
-                            <th scope="col">Produto</th>
-                            <th scope="col">Tipo atendimento</th>
+                            <th scope="col">cliente</th>
+                            <th scope="col">situacao</th>
+                            <th scope="col">descricao</th>
+                            <th scope="col">solucao</th>                            
+                            <th scope="col">produtos</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><fmt:formatDate value="${c.dt_hr_atendimento}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                            <td>${c.dsc_atendimento}</td>
-                            <td>${cliente}</td>
-                            <td>${c.res_atendimento}</td>
-                            <td>${produto}</td>
-                            <td>${tipoA}</td>                                  
+                            <td><fmt:formatDate value="${x.dataHora}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                <td>${cliente}</td>
+                                <td>${x.situacao}</td>
+                                <td>${x.descricao}</td>
+                                <td>${x.solucao}</td>
+                                <td>${produto}</td>
+                                <c:if test= "${loginBean.tipo == 'F'}">
+                                    <td><a href="AtendimentoServlet?action=resolver&id=${x.id_atendimento}"><button class="btn btn-primary">RESOLVER</button></a></td>
+                                </c:if>
                         </tr>              
                     </tbody>
                 </table>
                 <br/>
                 <br/>        
-                <a href="AtendimentoServlet?action=list"><button class="btn btn-primary">VOLTAR</button></a>
+                <a href="ClientesServlet?action=list"><button class="btn btn-primary">VOLTAR</button></a>
             </c:when>
             <c:otherwise>
                 <jsp:forward page="index.jsp">
