@@ -11,7 +11,7 @@
     function confirmaExclusao(id) {
         if (confirm("Deseja mesmo apagar o registro com código " + id + "?")) {
             // Faz o processamento necessário para exclusão
-            location.href = "ProdutoServlet?action=remove&id=" + id + "";
+            location.href = "ProdutoServlet?action=remover&id=" + id + "";
         }
     }
 </script>
@@ -51,13 +51,13 @@
                                 <td>${x.peso_produto}</td>                                
                                 <td>${categorias[theCount.index]}</td>                                
                                 <td><a href="ProdutoServlet?action=show&id=${x.id_produto}"><button class="btn btn-primary">Visualizar</button></a></td>
-                                <td><a href="FuncionarioServlet?action=catUpdate&id=${x.id_produto}"><button class="btn btn-primary">Alterar</button></a></td>
+                                <td><a href="ProdutoServlet?action=formUpdate&id=${x.id_produto}"><button class="btn btn-primary">Alterar</button></a></td>
                                 <td><a href="javascript: confirmaExclusao(${x.id_produto});"><button class="btn btn-primary">Remover</button></a></td>
                             </tr>
                         </c:forEach>
                     </tbody>
                 </table>
-                <a href="FuncionarioServlet?action=formNew"><button class="btn btn-primary">NOVO</button></a>
+                <a href="ProdutoServlet?action=formNew"><button class="btn btn-primary">NOVO</button></a>
                 <a href="FuncionarioServlet?action=list"><button class="btn btn-danger">VOLTAR</button></a>
             </c:when>
             <c:otherwise>

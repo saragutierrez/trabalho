@@ -38,7 +38,7 @@
                 </table>
                 <br/>
                 <br/>        
-                <a href="FuncionarioServlet?action=listCat"><button class="btn btn-danger">VOLTAR</button></a>
+                <a href="ProdutoServlet?action=list"><button class="btn btn-danger">VOLTAR</button></a>
             </x:when>
             <x:otherwise>
                 <jsp:forward page="index.jsp">
