@@ -135,126 +135,144 @@
             <div class="row">
                 <div class="col-md-12">
                     <c:choose>
-                        <c:when test = "${not empty loginBean.nome}">                            
+                        <c:when test = "${not empty loginBean.tipo}">                            
                             <c:if test = "${form == 'alterar'}">
                                 <form class="form-group" action="GerenteServlet?action=update" method="POST">  
-                                    <h1 style="text-align: center; color: red">ALTERAR FUNCIONARIO</h1>
+                                    <h1 style="text-align: center; color: red">ALTERAR </h1>
                                 </c:if>
-                                <c:if test = "${form == null}">
-                                    <form class="form-group" action="GerenteServlet?action=new" method="POST">  
-                                        <h1 style="text-align: center; color: red">CADASTRAR FUNCIONARIO</h1>
+                                <c:if test = "${form == 'alterarC'}">
+                                    <form class="form-group" action="ClientesServlet?action=update" method="POST">  
+                                        <h1 style="text-align: center; color: red">ALTERAR </h1>
                                     </c:if>
-                                    <div class="row">
-                                        <!--<label for="id">ID</label>-->
-                                        <input type="hidden" class="form-control" name="id" value="${form == "alterar" ? c.id : ""}">
-                                    </div>
-                                    <div class="row">
-                                        <label for="name">NOME</label>
-                                        <input required type="text" class="form-control" name="nome" value="${form == "alterar" ? c.nome : ""}" placeholder="Ex.: Ana da Silva">
-                                    </div>
-                                    <div class="row">
-                                        <label for="cpf">CPF</label>
-                                        <input required type="text" class="form-control" id="cpf" onBlur="javascript:validarCpf();" name="cpf" value="${form == "alterar" ? c.cpf : ""}" placeholder="Ex.: xxx.xxx.xxx-xx">
-                                    </div>
-
-                                    <div class="row">
-                                        <label for="email">EMAIL</label>
-                                        <input required type="text" class="form-control" name="email" value="${form == "alterar" ? c.email : ""}" placeholder="Ex.: ana@gmail.com">
-                                    </div>          
-                                    <!--TODO FAZER MASCARA PARA TELEFONE-->             
-                                    <div class="row">
-                                        <label for="tel">TELEFONE</label>
-                                        <input required type="text" class="form-control" name="tel" value="${form == "alterar" ? c.tel : ""}" placeholder="(41)565555">
-                                    </div>
-
-                                    <div class="row">
-                                        <label for="rua">RUA</label>
-                                        <input required type="text" class="form-control" name="rua" value="${form == "alterar" ? c.rua : ""}" placeholder="Ex.: Rua das Flores">
-                                    </div>
-                                    <div class="row">
-                                        <label for="num">Nº</label>
-                                        <input required type="text" class="form-control" name="nr_cliente" value="${form == "alterar" ? c.nr_casa : ""}" placeholder="Ex.: 4512">                      
-                                    </div>
-                                    <div class="row">
-                                        <label for="complemento">Complemento</label>
-                                        <input required type="text" class="form-control" name="complemento" value="${form == "alterar" ? c.complemento : ""}" placeholder="Ex.: casa">                      
-                                    </div>                                    
-                                    <div class="row">
-                                        <label for="cep">CEP</label>
-                                        <input required type="text" class="form-control" id="cep" name="cep" value="${form == "alterar" ? c.cep : ""}" placeholder="Ex.: 00000-000">
-                                    </div> 
-                                    <!--todo cadastrar se é funcionario ou gerente-->      
-                                    <div class="btn-group" data-toggle="buttons">
-                                        <c:if test = "${c.tipo == 'G'}">
-                                            <label class="btn btn-default active">
-                                                <input type="radio" id="tipo" name="tipo" value="G" checked/> Gerente
-                                            </label>
-                                            <label class="btn btn-default">
-                                                <input type="radio" id="tipo1" name="tipo" value="F" />Funcionario
-                                            </label>
+                                    <c:if test = "${form == null}">
+                                        <form class="form-group" action="GerenteServlet?action=new" method="POST">  
+                                            <h1 style="text-align: center; color: red">CADASTRAR </h1>
                                         </c:if>
-                                        <c:if test = "${c.tipo == 'F'}">
-                                            <label class="btn btn-default active">
-                                                <input type="radio" id="tipo" name="tipo" value="G" checke/> Gerente
-                                            </label>
-                                            <label class="btn btn-default">
-                                                <input type="radio" id="tipo1" name="tipo" value="F" checked/>Funcionario
-                                            </label>
-                                        </c:if>
-                                    </div>                                    
-<!--                                    <div class="row">
-                                        <label for="senha">senha</label>
-                                        <input required type="text" class="form-control" id="senha" name="senha" value="${form == "alterar" ? c.senha : ""}" placeholder="Ex.: senhas">
-                                    </div> -->
+                                        <c:if test = "${form == 'newC'}">
+                                            <form class="form-group" action="ClientesServlet?action=new" method="POST">  
+                                                <h1 style="text-align: center; color: red">CADASTRAR </h1>
+                                            </c:if>
+                                            <div class="row">
+                                                <!--<label for="id">ID</label>-->
+                                                <input type="hidden" class="form-control" name="id" value="${form == ("alterar"||"alterarC") ? c.id : ""}">
+                                            </div>
+                                            <div class="row">
+                                                <label for="name">NOME</label>
+                                                <input required type="text" class="form-control" name="nome" value="${form == ("alterar"||"alterarC") ? c.nome : ""}" placeholder="Ex.: Ana da Silva">
+                                            </div>
+                                            <c:if test = "${form != 'alterarC'}">
+                                                <div class="row">
+                                                    <label for="cpf">CPF</label>
+                                                    <input required type="text" class="form-control" id="cpf" onBlur="javascript:validarCpf();" name="cpf" value="${form == "alterar" ? c.cpf : ""}" placeholder="Ex.: xxx.xxx.xxx-xx">
+                                                </div>
 
-                                    <div class="row">
-                                        <label>UF</label><br>
-                                        <select id="estado" name="estado" required>
-                                            <c:forEach items="${estados}" var="x">
-                                                <c:if test = "${x.id == c.estado.id}">
-                                                    <option value="${x.id}" selected>${x.sigla}</option>
-                                                    getCidades();                                                 
-                                                </c:if>
-                                                <c:if test = "${x.id != c.estado.id}">
-                                                    <option value="${x.id}">${x.sigla}</option>
-                                                </c:if>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="row">
-                                        <label>Cidade:</label><br>
-                                        <select id="cidade" name="cidade" required>
-                                            <c:forEach items="${cidades}" var="x">
-                                                <c:if test = "${x.id == c.cidade.id}">
-                                                    <option value="${x.id}" selected>${x.nome}</option>
-                                                    getCidades();                                                 
-                                                </c:if>
-                                                <c:if test = "${x.id != c.cidade.id}">
-                                                    <option value="${x.id}">${x.nome}</option>
-                                                </c:if>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    </div>
-                                    </div> 
-                                    <c:if test = "${form == 'alterar'}">
-                                        <input type="submit" id="cadastrar" class="btn btn-primary" value="${form == "alterar" ? "ALTERAR" : "SALVAR"}">
-                                    </c:if>
-                                    <c:if test = "${form == 'null'}">
-                                        <input type="submit" id="cadastrar" class="btn btn-primary" value="${form == "alterar" ? "ALTERAR" : "SALVAR"}" disabled>
-                                    </c:if>
-                                </form>
-                                <a href="GerenteServlet?action=list" class="btn btn-danger"> CANCELAR </a>
-                            </c:when>
-                            <c:otherwise>
-                                <jsp:forward page="index.jsp">
-                                    <jsp:param name="msg" value="Usuário deve se autenticar para acessar o sistema!"/> 
-                                </jsp:forward>
-                            </c:otherwise>
-                        </c:choose>
-                </div>
-            </div>
-        </div>
-    </body>
+                                                <div class="row">
+                                                    <label for="email">EMAIL</label>
+                                                    <input required type="text" class="form-control" name="email" value="${form == "alterar" ? c.email : ""}" placeholder="Ex.: ana@gmail.com">
+                                                </div>     
+                                            </c:if>
+                                            <!--TODO FAZER MASCARA PARA TELEFONE-->             
+                                            <div class="row">
+                                                <label for="tel">TELEFONE</label>
+                                                <input required type="text" class="form-control" name="tel" value="${form == ("alterar"||"alterarC") ? c.tel : ""}" placeholder="(41)565555">
+                                            </div>
 
-</html>
+                                            <div class="row">
+                                                <label for="rua">RUA</label>
+                                                <input required type="text" class="form-control" name="rua" value="${form == ("alterar"||"alterarC") ? c.rua : ""}" placeholder="Ex.: Rua das Flores">
+                                            </div>
+                                            <div class="row">
+                                                <label for="num">Nº</label>
+                                                <input required type="text" class="form-control" name="nr_cliente" value="${form == ("alterar"||"alterarC") ? c.nr_casa : ""}" placeholder="Ex.: 4512">                      
+                                            </div>
+                                            <div class="row">
+                                                <label for="complemento">Complemento</label>
+                                                <input required type="text" class="form-control" name="complemento" value="${form == ("alterar"||"alterarC") ? c.complemento : ""}" placeholder="Ex.: casa">                      
+                                            </div>                                    
+                                            <div class="row">
+                                                <label for="cep">CEP</label>
+                                                <input required type="text" class="form-control" id="cep" name="cep" value="${form == ("alterar"||"alterarC") ? c.cep : ""}" placeholder="Ex.: 00000-000">
+                                            </div> 
+                                            <!--todo cadastrar se é funcionario ou gerente-->      
+                                            <div class="btn-group" data-toggle="buttons">
+                                                <c:if test = "${c.tipo == 'G'}">
+                                                    <label class="btn btn-default active">
+                                                        <input type="radio" id="tipo" name="tipo" value="G" checked/> Gerente
+                                                    </label>
+                                                    <label class="btn btn-default">
+                                                        <input type="radio" id="tipo1" name="tipo" value="F" />Funcionario
+                                                    </label>
+                                                </c:if>
+                                                <c:if test = "${c.tipo == 'F'}">
+                                                    <label class="btn btn-default active">
+                                                        <input type="radio" id="tipo" name="tipo" value="G" checke/> Gerente
+                                                    </label>
+                                                    <label class="btn btn-default">
+                                                        <input type="radio" id="tipo1" name="tipo" value="F" checked/>Funcionario
+                                                    </label>
+                                                </c:if>
+                                            </div>           
+                                            <c:if test = "${form == ('newC'|| 'alterarC')}">
+                                                <div class="row">
+                                                    <label for="senha">Senha</label>
+                                                    <input required type="text" class="form-control" id="senha" name="senha" value="${form == ("alterar"||"alterarC") ? c.senha : ""}" placeholder="Ex.: senhas">
+                                                </div> 
+                                            </c:if>
+
+                                            <div class="row">
+                                                <label>UF</label><br>
+                                                <select id="estado" name="estado" required>
+                                                    <c:forEach items="${estados}" var="x">
+                                                        <c:if test = "${x.id == c.estado.id}">
+                                                            <option value="${x.id}" selected>${x.sigla}</option>
+                                                            getCidades();                                                 
+                                                        </c:if>
+                                                        <c:if test = "${x.id != c.estado.id}">
+                                                            <option value="${x.id}">${x.sigla}</option>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+                                            <div class="row">
+                                                <label>Cidade:</label><br>
+                                                <select id="cidade" name="cidade" required>
+                                                    <c:forEach items="${cidades}" var="x">
+                                                        <c:if test = "${x.id == c.cidade.id}">
+                                                            <option value="${x.id}" selected>${x.nome}</option>
+                                                            getCidades();                                                 
+                                                        </c:if>
+                                                        <c:if test = "${x.id != c.cidade.id}">
+                                                            <option value="${x.id}">${x.nome}</option>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+                                            </div>
+                                            </div> 
+                                            <c:if test = "${form == 'alterar'}">
+                                                <input type="submit" id="cadastrar" class="btn btn-primary" value="${form == "alterar" ? "ALTERAR" : "SALVAR"}">
+                                            </c:if>
+                                            <c:if test = "${form == 'null'}">
+                                                <input type="submit" id="cadastrar" class="btn btn-primary" value="${form == "alterar" ? "ALTERAR" : "SALVAR"}" disabled>
+                                            </c:if>
+                                            <c:if test = "${form == 'newC'}">
+                                                <input type="submit" id="cadastrar" class="btn btn-primary" value="${form == "alterar" ? "ALTERAR" : "SALVAR"}" disabled>
+                                            </c:if>
+                                            <c:if test = "${form == 'alterarC'}">
+                                                <input type="submit" class="btn btn-primary" value="${form == "alterar" ? "ALTERAR" : "SALVAR"}">
+                                            </c:if>
+                                        </form>
+                                        <a href="GerenteServlet?action=list" class="btn btn-danger"> CANCELAR </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <jsp:forward page="index.jsp">
+                                            <jsp:param name="msg" value="Usuário deve se autenticar para acessar o sistema!"/> 
+                                        </jsp:forward>
+                                    </c:otherwise>
+                                </c:choose>
+                                </div>
+                                </div>
+                                </div>
+                                </body>
+
+                                </html>

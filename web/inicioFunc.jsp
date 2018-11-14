@@ -11,6 +11,14 @@
 <!DOCTYPE html>
 <!--TODO Se o atendimento estiver há mais de uma semana em aberto, deve ser mostrado em vermelho, indicando criticidade.
 TODO Tela de resolucao,Listagem de todos os atendimentos, cad de produto, cad de categoria -->
+<script>
+    function confirmaExclusao(id) {
+        if (confirm("Deseja mesmo apagar o registro com código " + id + "?")) {
+            // Faz o processamento necessário para exclusão
+            location.href = "AtendimentoServlet?action=remover&id=" + id + "";
+        }
+    }
+</script>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -53,10 +61,17 @@ TODO Tela de resolucao,Listagem de todos os atendimentos, cad de produto, cad de
                                 <c:if test= "${loginBean.tipo != 'G'}">
                                     <td><a href="AtendimentoServlet?action=show&id=${x.id_atendimento}"><button class="btn btn-primary">VER TUDO</button></a></td>
                                 </c:if>
+                                    <c:choose>
+                                    <c:when test =  "${loginBean.tipo == 'F'}">
+                                        <c:if test= "${x.situacao == 'aberto'}">
+                                            <!--SEABERTO-->  <td><a href="AtendimentoServlet?action=formResolver&id=${x.id_atendimento}"><button class="btn btn-danger">RESOLVER</button></a></td>
+                                        </c:if>
+                                    </c:when>
+                                </c:choose>
                                 <c:choose>
                                     <c:when test =  "${loginBean.tipo == 'C'}">
                                         <c:if test= "${x.situacao == 'aberto'}">
-                                            <!--SEABERTO-->  <td><a href="AtendimentoServlet?action=remover&id=${x.id_atendimento}"><button class="btn btn-primary">remover</button></a></td>
+                                            <!--SEABERTO-->  <td><a href="javascript: confirmaExclusao(${x.id_atendimento});"><button class="btn btn-danger">remover</button></a></td>
                                         </c:if>
                                     </c:when>
                                 </c:choose>
@@ -76,8 +91,8 @@ TODO Tela de resolucao,Listagem de todos os atendimentos, cad de produto, cad de
                 </c:if>
                 <c:if test= "${loginBean.tipo == 'C'}">
                     <a href="AtendimentoServlet?action=formNew"><button class="btn btn-primary">CRIAR ATENDIMENTO</button></a>
-                    <a href="algumaServlet?action=list"><button class="btn btn-primary">alterar dados cadastrais</button></a>
-                    <a href="CLientesServlet?action=list"><button class="btn btn-danger">VOLTAR</button></a>
+                    <a href="ClientesServlet?action=formUpdate&id=${loginBean.id}"><button class="btn btn-primary">alterar dados cadastrais</button></a>
+                    <a href="LogoutServlet"><button class="btn btn-danger">SAIR</button></a>
                 </c:if>
             </c:when>
             <c:otherwise>

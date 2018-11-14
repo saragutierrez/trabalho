@@ -36,6 +36,7 @@ and open the template in the editor.
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>   <br/> 
+        <a href="ClientesServlet?action=cadastro" class="btn btn-primaryr"> CRIAR CADASTRO </a>
         <footer>
             <div class="alert alert-success" role="alert" style="text-align: center">                 
                 <h4>Em caso de problemas contactar a administradora: ${configuracao.email}</h4>
