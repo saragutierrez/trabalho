@@ -39,10 +39,10 @@
                     <tbody>
                         <c:forEach items="${categorias}" var="x">
                             <tr>
-                                <td>${x.nome_cat}</td>                                
-                                <td><a href="FuncionarioServlet?action=show&id=${x.id_cat}"><button class="btn btn-primary">Visualizar</button></a></td>
-                                <td><a href="FuncionarioServlet?action=catUpdate&id=${x.id_cat}"><button class="btn btn-primary">Alterar</button></a></td>
-                                <td><a href="javascript: confirmaExclusao(${x.id_cat});"><button class="btn btn-primary">Remover</button></a></td>
+                                <td>${x.nome_categoria}</td>                                
+                                <td><a href="FuncionarioServlet?action=show&id=${x.id_categoria}"><button class="btn btn-primary">Visualizar</button></a></td>
+                                <td><a href="FuncionarioServlet?action=catUpdate&id=${x.id_categoria}"><button class="btn btn-primary">Alterar</button></a></td>
+                                <td><a href="javascript: confirmaExclusao(${x.id_categoria});"><button class="btn btn-primary">Remover</button></a></td>
                             </tr>
                         </c:forEach>
                     </tbody>

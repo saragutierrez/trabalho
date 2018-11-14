@@ -34,7 +34,7 @@
                     <div class="row">
                         <label for="descricao">descricao</label>
                         <input type="text" class="form-control" name="descricao" value="">
-                    </div>
+                    </div>                               
                     <div class="row">
                         <label>PRODUTOS</label><br>
                         <select id="produto" name="produto" required>
@@ -47,22 +47,22 @@
                         <label>TIPOS DE ATENDIMENTO</label><br>
                         <select id="ta" name="ta" required>
                             <c:forEach items="${ta}" var="x">                            
-                                <option value="${x.id_tipo_atendimento}">${x.nome_tipo_atendimento}</option>                            
+                                <option value="${x.id_tipoAt}">${x.nome_tipoAt}</option>                            
                             </c:forEach>
                         </select>
                     </div>
                     <div class="row">
-                        <label>CLIENTES</label><br>
-                        <select id="clientes" name="clientes" required>
-                            <c:forEach items="${clientes}" var="x">                            
-                                <option value="${x.id}">${x.nome}</option>                            
-                            </c:forEach>
-                        </select>
+                        <!--<label>CLIENTE = </label><br>-->
+                        <!--<select id="clientes" name="clientes" >-->
+                            <%--<c:forEach items="${clientes}" var="x">--%>       
+                            <input type="hidden" class="form-control" name="${cliente.id}" value="${cliente.nome}">                           
+                            <%--</c:forEach>--%>
+                        <!--</select>-->
                     </div>
-                    <div class="row">
+<!--                    <div class="row">
                         <label for="res_atendimento">O atendimento foi resolvido ?</label>
                         <input type="checkbox" id="res_atendimento" name="res_atendimento"/>
-                    </div>
+                    </div>-->
                     <input type="submit" class="btn btn-primary" value="SALVAR">
                 </form>
             </c:when>

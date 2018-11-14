@@ -18,7 +18,7 @@ TODO Tela de resolucao,Listagem de todos os atendimentos, cad de produto, cad de
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     </head>
     <body>
-        <h4>TELA COMPARTILHADA POR FUNCIONARIO E GERENTE <br> 
+        <h4>TELA COMPARTILHADA POR FUNCIONARIO,GERENTE E CLIENTE <br> 
             DEPENDE DO PARAMETRO PASSADO ACESSA ATENDIMENTOS Ñ RESOLVIDOS OU RESOLVIDOS<br>
             FALTA MUDAR A COR PARA VERMELHO QUANDO ABERTO A MAIS DE UMA SEMANA<br>
         </h4>
@@ -34,17 +34,16 @@ TODO Tela de resolucao,Listagem de todos os atendimentos, cad de produto, cad de
                             <th scope="col">descricao</th>
                             <th scope="col">solucao</th>                            
                             <th scope="col">produtos</th>
-                                <c:if test= "${loginBean.tipo != 'F'}">
-                                <th scope="col">x</th>
-                                </c:if>
-                                <c:if test= "${loginBean.tipo == 'C'}">
-                                <th scope="col">x</th>
-                                </c:if>
+                            <th scope="col">x</th>
+                            <th scope="col">x</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody>                        
                         <c:forEach items="${atendimentos}" var="x" varStatus="theCount">
                             <tr>
+                                <c:if test= "${x.dataHora!= 'G'}">
+
+                                </c:if>
                                 <td><fmt:formatDate value="${x.dataHora}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
                                 <td>${clientes[theCount.index]}</td>
                                 <td>${x.situacao}</td>
@@ -57,7 +56,7 @@ TODO Tela de resolucao,Listagem de todos os atendimentos, cad de produto, cad de
                                 <c:choose>
                                     <c:when test =  "${loginBean.tipo == 'C'}">
                                         <c:if test= "${x.situacao == 'aberto'}">
-                                <!--SEABERTO-->  <td><a href="AtendimentoServlet?action=remover&id=${x.id_atendimento}"><button class="btn btn-primary">remover</button></a></td>
+                                            <!--SEABERTO-->  <td><a href="AtendimentoServlet?action=remover&id=${x.id_atendimento}"><button class="btn btn-primary">remover</button></a></td>
                                         </c:if>
                                     </c:when>
                                 </c:choose>
@@ -69,11 +68,16 @@ TODO Tela de resolucao,Listagem de todos os atendimentos, cad de produto, cad de
                     <!--//PARA OCULTAR OS BOTOES QUANDO O GERENTE ACESSA ESSA TELA-->
                     <a href="GerenteServlet?action=todosAtendimentos"><button class="btn btn-primary">Listagem de todos os atendimentos</button></a>
                     <a href="FuncionarioServlet?action=listCat"><button class="btn btn-primary">Gerenciar Categorias</button></a>
-                    <a href="FuncionarioServlet?action=prodNew"><button class="btn btn-primary">Gerenciar Produtos</button></a>
+                    <a href="ProdutoServlet?action=list"><button class="btn btn-primary">Gerenciar Produtos</button></a>
                     <a href="FuncionarioServlet?action=list"><button class="btn btn-danger">VOLTAR</button></a>
                 </c:if>
                 <c:if test= "${loginBean.tipo == 'G'}">
                     <a href="GerenteServlet?action=list"><button class="btn btn-danger">VOLTAR</button></a>
+                </c:if>
+                <c:if test= "${loginBean.tipo == 'C'}">
+                    <a href="AtendimentoServlet?action=formNew"><button class="btn btn-primary">CRIAR ATENDIMENTO</button></a>
+                    <a href="algumaServlet?action=list"><button class="btn btn-primary">alterar dados cadastrais</button></a>
+                    <a href="CLientesServlet?action=list"><button class="btn btn-danger">VOLTAR</button></a>
                 </c:if>
             </c:when>
             <c:otherwise>

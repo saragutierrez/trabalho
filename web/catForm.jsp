@@ -30,11 +30,11 @@
                                     </c:if>
                                     <div class="row">
                                         <!--<label for="id">ID</label>-->
-                                        <input type="hidden" class="form-control" name="id" value="${form == "alterar" ? c.id_cat : ""}">
+                                        <input type="hidden" class="form-control" name="id" value="${form == "alterar" ? c.id_categoria : ""}">
                                     </div>
                                     <div class="row">
                                         <label for="name">NOME</label>
-                                        <input required type="text" class="form-control" name="nome" value="${form == "alterar" ? c.nome_cat : ""}" placeholder="Ex.: Cabelo">
+                                        <input required type="text" class="form-control" name="nome" value="${form == "alterar" ? c.nome_categoria : ""}" placeholder="Ex.: Cabelo">
                                     </div>                                                     
 
                                     <input type="submit" class="btn btn-primary" value="${form == "alterar" ? "ALTERAR" : "SALVAR"}">

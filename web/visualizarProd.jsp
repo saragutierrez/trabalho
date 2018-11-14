@@ -1,6 +1,6 @@
 <%-- 
-    Document   : visualizarCategoria
-    Created on : 11/11/2018, 19:34:50
+    Document   : visualizarProd
+    Created on : 13/11/2018, 22:03:09
     Author     : sa
 --%>
 
@@ -15,18 +15,24 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     </head>
     <body>
-         <x:choose>
+        <x:choose>
             <x:when test = "${not empty loginBean.nome}">        
-                <h1 style="text-align: center; color: red">VISUALIZAR CATEGORIA</h1>
+                <h1 style="text-align: center; color: red">VISUALIZAR PRODUTO</h1>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">NOME</th>                            
+                            <th scope="col">NOME DO PRODUTO</th>                            
+                            <th scope="col">DESCRICAO</th>                            
+                            <th scope="col">PESO</th>                            
+                            <th scope="col">CATEGORIA</th>                 
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>${x.nome_categoria}</td>                            
+                            <td>${x.nome_produto}</td>                                
+                            <td>${x.descricao_produto}</td>                                
+                            <td>${x.peso_produto}</td>                     
+                            <td>${cat}</td>                     
                         </tr>              
                     </tbody>
                 </table>
