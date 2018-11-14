@@ -6,7 +6,9 @@
 package com.ufpr.tads.web2.facade;
 
 import com.ufpr.tads.web2.beans.Categoria;
+import com.ufpr.tads.web2.beans.Produto;
 import com.ufpr.tads.web2.dao.CategoriaDao;
+import com.ufpr.tads.web2.dao.ProdutoDao;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -42,6 +44,12 @@ public class CategoriaFacade {
     public static Categoria buscarCategoria(int id) throws SQLException {
         CategoriaDao cDao = new CategoriaDao();
         Categoria retorno = cDao.buscaCategoria(id);
+        return retorno;
+    }
+    
+    public static Produto buscarProduto(int id) throws SQLException {
+        ProdutoDao pDao = new ProdutoDao();
+        Produto retorno = pDao.buscaProduto(id);
         return retorno;
     }
 }

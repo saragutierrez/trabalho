@@ -10,22 +10,23 @@ package com.ufpr.tads.web2.beans;
  * @author sa
  */
 public class Categoria {
-    private int id_cat;
-    private String nome_cat;
+    private int id_categoria;
+    private String nome_categoria;
 
-    public int getId_cat() {
-        return id_cat;
+    public int getId_categoria() {
+        return id_categoria;
     }
 
-    public void setId_cat(int id_cat) {
-        this.id_cat = id_cat;
+    public void setId_categoria(int id_categoria) {
+        this.id_categoria = id_categoria;
     }
 
-    public String getNome_cat() {
-        return nome_cat;
+    public String getNome_categoria() {
+        return nome_categoria;
     }
 
-    public void setNome_cat(String nome_cat) {
-        this.nome_cat = nome_cat;
+    public void setNome_categoria(String nome_categoria) {
+        this.nome_categoria = nome_categoria;
     }
+
 }

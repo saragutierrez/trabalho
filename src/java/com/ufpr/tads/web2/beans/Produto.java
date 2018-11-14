@@ -12,8 +12,8 @@ package com.ufpr.tads.web2.beans;
 public class Produto {
     private int id_produto;
     private String nome_produto;
-    private Categoria cat;
-    private String dscricao_produto;
+    private int id_categoria;
+    private String descricao_produto;
     private Double peso_produto;
     
     public int getId_produto() {
@@ -32,20 +32,20 @@ public class Produto {
         this.nome_produto = nome_produto;
     }
 
-    public Categoria getCat() {
-        return cat;
+    public int getId_categoria() {
+        return id_categoria;
     }
 
-    public void setCat(Categoria cat) {
-        this.cat = cat;
+    public void setId_categoria(int id_categoria) {
+        this.id_categoria = id_categoria;
     }
 
-    public String getDscricao_produto() {
-        return dscricao_produto;
+    public String getDescricao_produto() {
+        return descricao_produto;
     }
 
-    public void setDscricao_produto(String dscricao_produto) {
-        this.dscricao_produto = dscricao_produto;
+    public void setDescricao_produto(String descricao_produto) {
+        this.descricao_produto = descricao_produto;
     }
 
     public Double getPeso_produto() {

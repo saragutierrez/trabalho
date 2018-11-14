@@ -6,12 +6,10 @@
 package com.ufpr.tads.web2.servlets;
 
 import static com.mysql.jdbc.StringUtils.isNullOrEmpty;
-import com.ufpr.tads.web2.beans.Atendimento;
-import com.ufpr.tads.web2.beans.Categoria;
+import com.ufpr.tads.web2.beans.Produto;
 import com.ufpr.tads.web2.beans.UsuarioBean;
 import com.ufpr.tads.web2.facade.AtendimentoFacade;
 import com.ufpr.tads.web2.facade.CategoriaFacade;
-import com.ufpr.tads.web2.facade.UsuarioFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -31,8 +29,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author sa
  */
-@WebServlet(name = "FuncionarioServlet", urlPatterns = {"/FuncionarioServlet"})
-public class FuncionarioServlet extends HttpServlet {
+@WebServlet(name = "ProdutoServlet", urlPatterns = {"/ProdutoServlet"})
+public class ProdutoServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,7 +40,6 @@ public class FuncionarioServlet extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
-     * @throws java.sql.SQLException
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
@@ -56,64 +53,29 @@ public class FuncionarioServlet extends HttpServlet {
                 request.setAttribute("msg", "Usuário deve se autenticar para acessar o sistema");
                 rd.forward(request, response);
             } else if ((isNullOrEmpty(action)) || action.equals("list")) {
-                List<Atendimento> atendimentos = AtendimentoFacade.buscarAtendimentosNaoResolvidos();
-                List<String> produtos = new ArrayList<>();
-                List<String> clientes = new ArrayList<>();
-                for (Atendimento a : atendimentos) {
-                    String p = AtendimentoFacade.buscarProduto(a.getId_produto()).getNome_produto();
-                    String c = UsuarioFacade.show(a.getId_cliente()).getNome();
-                    produtos.add(p);
-                    clientes.add(c);
+                List<Produto> produtos = AtendimentoFacade.buscarProdutos();
+                List<String> categorias = new ArrayList<>();
+                for (Produto p : produtos) {
+                    String cats = CategoriaFacade.buscarCategoria(p.getId_categoria()).getNome_categoria();
+                    categorias.add(cats);
                 }
-                request.setAttribute("atendimentos", atendimentos);//NaoResolvidos
+                request.setAttribute("categorias", categorias);
                 request.setAttribute("produtos", produtos);
-                request.setAttribute("clientes", clientes);
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioFunc.jsp");
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioProd.jsp");
                 rd.forward(request, response);
 
-            } else if (action.equals("listCat")) {
-                request.setAttribute("categorias", CategoriaFacade.buscarCategorias());
-                request.setAttribute("form", null);
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/catList.jsp");
+            } else if (action.equals("remover")) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                AtendimentoFacade.remove(id);
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/ProdutoServlet?action=list");
                 rd.forward(request, response);
-
+                
             } else if (action.equals("show")) {
                 int id = Integer.parseInt(request.getParameter("id"));
-                request.setAttribute("x", CategoriaFacade.buscarCategoria(id));
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/visualizarCategoria.jsp");
-                rd.forward(request, response);
-
-            } else if (action.equals("catUpdate")) {
-                int id = Integer.parseInt(request.getParameter("id"));
-                request.setAttribute("form", "alterar");
-                Categoria u = CategoriaFacade.buscarCategoria(id);
-                request.setAttribute("c", u);
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/catForm.jsp");
-                rd.forward(request, response);
-
-            } else if (action.equals("update")) {
-                Categoria c = new Categoria();
-                String idS = request.getParameter("id");
-                int convId = Integer.parseInt(idS.trim());
-                c.setId_categoria(convId);
-                c.setNome_categoria(request.getParameter("nome"));
-                CategoriaFacade.updateCat(c);
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/FuncionarioServlet?action=listCat");
-                rd.forward(request, response);
-            } else if (action.equals("remove")) {
-                int id = Integer.parseInt(request.getParameter("id"));
-                CategoriaFacade.remove(id);
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/FuncionarioServlet?action=listCat");
-                rd.forward(request, response);
-            } else if (action.equals("formNew")) {
-                request.setAttribute("form", null);
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/catForm.jsp");
-                rd.forward(request, response);
-            } else if (action.equals("new")) {
-                Categoria c = new Categoria();
-                c.setNome_categoria(request.getParameter("nome"));
-                CategoriaFacade.inserir(c);
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/FuncionarioServlet?action=listCat");
+                Produto p = CategoriaFacade.buscarProduto(id);
+                request.setAttribute("x", p);
+                request.setAttribute("cat", CategoriaFacade.buscarCategoria(p.getId_categoria()).getNome_categoria());
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/visualizarProd.jsp");
                 rd.forward(request, response);
             }
         }
@@ -134,7 +96,7 @@ public class FuncionarioServlet extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(FuncionarioServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProdutoServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -152,7 +114,7 @@ public class FuncionarioServlet extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(FuncionarioServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProdutoServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

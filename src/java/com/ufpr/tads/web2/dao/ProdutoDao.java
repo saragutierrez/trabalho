@@ -31,7 +31,9 @@ public class ProdutoDao {
                 Produto p = new Produto();
                 p.setId_produto(rs.getInt("id_produto"));
                 p.setNome_produto(rs.getString("nome_produto"));
-                
+                p.setDescricao_produto(rs.getString("descricao_produto"));
+                p.setPeso_produto(rs.getDouble("peso_produto"));
+                p.setId_categoria(rs.getInt("id_categoria"));                
                 produtos.add(p);
             }
             return produtos;
@@ -63,7 +65,19 @@ public class ProdutoDao {
         if (rs.next()) {
             p.setId_produto(rs.getInt("id_produto"));
             p.setNome_produto(rs.getString("nome_produto"));
+            p.setDescricao_produto(rs.getString("descricao_produto"));
+            p.setPeso_produto(rs.getDouble("peso_produto"));
+            p.setId_categoria(rs.getInt("id_categoria"));
         }
         return p;
+    }
+    
+     public void remove(int id) throws SQLException {
+        Connection con = ConnectionFactory.getConnection();
+        PreparedStatement st;
+        Produto p = new Produto();
+        st = con.prepareStatement("delete FROM trabalho.produto WHERE id_produto = ?");
+        st.setInt(1, id);
+        st.executeUpdate();
     }
 }

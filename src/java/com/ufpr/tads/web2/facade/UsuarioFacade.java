@@ -55,6 +55,12 @@ public class UsuarioFacade {
         return listaResultado;
     }
     
+    public static List<UsuarioBean> bucarTodosClientes() throws SQLException {
+        UsuarioDao ud = new UsuarioDao();
+        List<UsuarioBean> listaResultado = ud.buscarTodosClientes();
+        return listaResultado;
+    }
+    
     public static boolean update(UsuarioBean c) throws SQLException {
         UsuarioDao cDao = new UsuarioDao();
         boolean deuBoa;

@@ -30,6 +30,11 @@ public class AtendimentoFacade {
         AtendimentoDao at = new AtendimentoDao();
         at.remove(id);
     }
+    
+    public static void removeProd(int id) throws SQLException{
+        ProdutoDao p = new ProdutoDao();
+        p.remove(id);
+    }
 //    
 //    public static List<Atendimento> buscarAtendimentos(int id){
 //        AtendimentoDao at = new AtendimentoDao();
@@ -91,8 +96,8 @@ public class AtendimentoFacade {
         return retorno;
     }
 
-//   public static void inserir(Atendimento a){
-//       AtendimentoDao aDao = new AtendimentoDao();
-//       aDao.adiciona(a);
-//   }
+   public static void inserir(Atendimento a){
+       AtendimentoDao aDao = new AtendimentoDao();
+       aDao.adiciona(a);
+   }
 }

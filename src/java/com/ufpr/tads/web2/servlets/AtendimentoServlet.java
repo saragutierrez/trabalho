@@ -92,50 +92,41 @@ public class AtendimentoServlet extends HttpServlet {
                     AtendimentoFacade.remove(id);            
                     RequestDispatcher rd = getServletContext().getRequestDispatcher("/ClientesServlet?action=list");
                     rd.forward(request, response);
+                }else if (action.equals("formNew")) {
+                    List<Produto> produtos = AtendimentoFacade.buscarProdutos();
+                    List<TipoAtendimento> ta = AtendimentoFacade.buscarTiposAtendimento();
+                    UsuarioBean u = UsuarioFacade.show(logB.getId());
+                    Timestamp dataDeHoje = new Timestamp(System.currentTimeMillis());
+                    String s = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(dataDeHoje);
+                    request.setAttribute("produtos", produtos);
+                    request.setAttribute("dataDeHoje", s);
+                    request.setAttribute("ta", ta);
+                    request.setAttribute("cliente", u);
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/atendimento.jsp");
+                    rd.forward(request, response);
+                } else if (action.equals("new")) {
+                    Atendimento a = new Atendimento();
+                    a.setDescricao(request.getParameter("descricao"));
+                    int prod = Integer.parseInt(request.getParameter("produto"));
+                    int ta = Integer.parseInt(request.getParameter("ta"));
+                    System.out.println(prod);
+                    a.setId_produto(prod);
+                    a.setId_tipo_atendimento(ta);
+                    a.setId_cliente(logB.getId());
+                    String str = request.getParameter("datahora");
+                    Timestamp tm = null;
+                    try {
+                        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                        Date parseDate = format.parse(str);
+                        tm = new java.sql.Timestamp(parseDate.getTime());
+                    } catch (ParseException e) {
+                    }
+                    a.setDataHora(tm);
+                     System.out.println(tm);
+                    AtendimentoFacade.inserir(a);
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/ClientesServlet?action=list");
+                    rd.forward(request, response);
                 }
-//                } else if (action.equals("formNew")) {
-//                    List<Produto> produtos = AtendimentoFacade.buscarProdutos();
-//                    List<TipoAtendimento> ta = AtendimentoFacade.buscarTiposAtendimento();
-//                    List<Cliente> clientes = ClientesFacade.list();
-//                    Timestamp dataDeHoje = new Timestamp(System.currentTimeMillis());
-//                    String s = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(dataDeHoje);
-//                    request.setAttribute("produtos", produtos);
-//                    request.setAttribute("dataDeHoje", s);
-//                    request.setAttribute("ta", ta);
-//                    request.setAttribute("clientes", clientes);
-//                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/atendimento.jsp");
-//                    rd.forward(request, response);
-//                } else if (action.equals("new")) {
-//                    Atendimento a = new Atendimento();
-//                    a.setDsc_atendimento(request.getParameter("descricao"));
-//                    int prod = Integer.parseInt(request.getParameter("produto"));
-//                    int ta = Integer.parseInt(request.getParameter("ta"));
-//                    int cli = Integer.parseInt(request.getParameter("clientes"));
-//                    a.setId_produto(prod);
-//                    a.setId_tipo_atendimento(ta);
-//                    a.setId_cliente(cli);
-//                    String res_at = request.getParameter("res_atendimento");
-//                    if (res_at != null) {
-//                        a.setRes_atendimento("S");
-//                    } else {
-//                        a.setRes_atendimento("N");
-//                    }
-//                    a.setId_usuario(idU);
-//                    String str = request.getParameter("datahora");
-////                    System.out.println("datahora");
-//                    Timestamp tm = null;
-//                    try {
-//                        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-//                        Date parseDate = format.parse(str);
-//                        tm = new java.sql.Timestamp(parseDate.getTime());
-//                    } catch (ParseException e) {
-//                    }
-//                    a.setDt_hr_atendimento(tm);
-//                     System.out.println(tm);
-//                    AtendimentoFacade.inserir(a);
-//                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/AtendimentoServlet?action=list");
-//                    rd.forward(request, response);
-//                }
 
 //                }
             }

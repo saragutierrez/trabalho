@@ -97,6 +97,57 @@ public class UsuarioDao {
             }
         }
     }
+    public List<UsuarioBean> buscarTodosClientes() throws SQLException {
+        List<UsuarioBean> resultados = new ArrayList<>();
+        Connection con = ConnectionFactory.getConnection();
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            con = ConnectionFactory.getConnection();
+            st = con.prepareStatement("SELECT * FROM trabalho.usuario where tipo = 'C';");
+            CidadeDao cidadeDAO = new CidadeDao();
+            EstadoDao estadoDAO = new EstadoDao();
+            rs = st.executeQuery();
+            while (rs.next()) {
+                UsuarioBean ub = new UsuarioBean();
+                ub.setId(rs.getInt("id"));
+                ub.setNome(rs.getString("nome"));
+                ub.setTipo(rs.getString("tipo"));
+                ub.setCpf(rs.getString("cpf"));
+                ub.setEmail(rs.getString("email"));
+                ub.setTel(rs.getString("tel"));
+                ub.setRua(rs.getString("rua"));
+                ub.setNr_casa(rs.getInt("nr_casa"));
+                ub.setComplemento(rs.getString("complemento"));
+                ub.setCep(rs.getString("cep"));
+                ub.setCidade(cidadeDAO.buscaCidadePorId(rs.getInt("id_cidade")));
+                ub.setEstado(estadoDAO.buscaEstadoPorIdC(rs.getInt("id_cidade")));
+                resultados.add(ub);
+            }
+            return resultados;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+    }
 
     public List<UsuarioBean> buscarTodos() throws SQLException {
         List<UsuarioBean> resultados = new ArrayList<>();

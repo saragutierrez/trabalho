@@ -29,8 +29,8 @@ public class CategoriaDao {
             rs = st.executeQuery();
             while (rs.next()) {
                 Categoria c = new Categoria();
-                c.setId_cat(rs.getInt("id_categoria"));
-                c.setNome_cat(rs.getString("nome_categoria"));
+                c.setId_categoria(rs.getInt("id_categoria"));
+                c.setNome_categoria(rs.getString("nome_categoria"));
                 categorias.add(c);
             }
             return categorias;
@@ -60,8 +60,8 @@ public class CategoriaDao {
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
         if (rs.next()) {
-            c.setId_cat(rs.getInt("id_categoria"));
-            c.setNome_cat(rs.getString("nome_categoria"));
+            c.setId_categoria(rs.getInt("id_categoria"));
+            c.setNome_categoria(rs.getString("nome_categoria"));
         }
         return c;
     }
@@ -72,8 +72,8 @@ public class CategoriaDao {
         try {
             PreparedStatement st = con.prepareStatement(sql);
             st = con.prepareStatement(sql);
-            st.setString(1, c.getNome_cat());
-            st.setInt(2, c.getId_cat());
+            st.setString(1, c.getNome_categoria());
+            st.setInt(2, c.getId_categoria());
             st.executeUpdate();
             st.getResultSet();
             return true;
@@ -101,7 +101,7 @@ public class CategoriaDao {
             // prepared statement para inserção
             PreparedStatement stmt = con.prepareStatement(sql);
             // seta os valores
-            stmt.setString(1, cat.getNome_cat());
+            stmt.setString(1, cat.getNome_categoria());
            
             // executa
             stmt.executeUpdate();

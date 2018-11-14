@@ -21,25 +21,24 @@ import java.util.List;
  */
 public class AtendimentoDao {
 
-//    public void adiciona(Atendimento at) {
-//        Connection con = ConnectionFactory.getConnection();
-//        String sql = ("insert into teste.tb_atendimento(dsc_atendimento,id_usuario,id_cliente,res_atendimento,id_produto,id_tipo_atendimento,dt_hr_atendimento) values (?,?,?,?,?,?,?)");
-//        try {
-//            PreparedStatement stmt = con.prepareStatement(sql);
-//            stmt.setString(1, at.getDsc_atendimento());
-//            stmt.setInt(2, at.getId_usuario());
-//            stmt.setInt(3, at.getId_cliente());
-//            stmt.setString(4, at.getRes_atendimento());
-//            stmt.setInt(5, at.getId_produto());
-//            stmt.setInt(6, at.getId_tipo_atendimento());
-//            stmt.setTimestamp(7,new java.sql.Timestamp(at.getDt_hr_atendimento().getTime()));          
-//            stmt.executeUpdate();
-//            stmt.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
+    public void adiciona(Atendimento at) {
+        Connection con = ConnectionFactory.getConnection();
+        String sql = ("insert into trabalho.atendimento(dataHora,id_cliente,situacao,descricao,id_produto,id_tipoAt) values (?,?,?,?,?,?)");
+        try {
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setTimestamp(1,new java.sql.Timestamp(at.getDataHora().getTime()));   
+            stmt.setInt(2, at.getId_cliente());
+            stmt.setString(3,"aberto");            
+            stmt.setString(4, at.getDescricao());  
+            stmt.setInt(5, at.getId_produto());
+            stmt.setInt(6, at.getId_tipo_atendimento());     
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 //    public List<Atendimento> buscarAtendimentos(int id) {
 //        List<Atendimento> resultados = new ArrayList<Atendimento>();
 //        Connection con = new ConnectionFactory().getConnection();
