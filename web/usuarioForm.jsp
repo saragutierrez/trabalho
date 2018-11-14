@@ -185,23 +185,32 @@
                                     </div> 
                                     <!--todo cadastrar se é funcionario ou gerente-->      
                                     <div class="btn-group" data-toggle="buttons">
-                                        <label class="btn btn-default active">
-                                            <input type="radio" id="tipo" name="tipo" value="G"/> Gerente
-                                        </label>
-                                        <label class="btn btn-default">
-                                            <input type="radio" id="tipo1" name="tipo" value="F" />Funcionario
-                                        </label>
+                                        <c:if test = "${c.tipo == 'G'}">
+                                            <label class="btn btn-default active">
+                                                <input type="radio" id="tipo" name="tipo" value="G" checked/> Gerente
+                                            </label>
+                                            <label class="btn btn-default">
+                                                <input type="radio" id="tipo1" name="tipo" value="F" />Funcionario
+                                            </label>
+                                        </c:if>
+                                        <c:if test = "${c.tipo == 'F'}">
+                                            <label class="btn btn-default active">
+                                                <input type="radio" id="tipo" name="tipo" value="G" checke/> Gerente
+                                            </label>
+                                            <label class="btn btn-default">
+                                                <input type="radio" id="tipo1" name="tipo" value="F" checked/>Funcionario
+                                            </label>
+                                        </c:if>
                                     </div>                                    
-                                    <div class="row">
+<!--                                    <div class="row">
                                         <label for="senha">senha</label>
                                         <input required type="text" class="form-control" id="senha" name="senha" value="${form == "alterar" ? c.senha : ""}" placeholder="Ex.: senhas">
-                                    </div> 
+                                    </div> -->
 
                                     <div class="row">
                                         <label>UF</label><br>
                                         <select id="estado" name="estado" required>
                                             <c:forEach items="${estados}" var="x">
-
                                                 <c:if test = "${x.id == c.estado.id}">
                                                     <option value="${x.id}" selected>${x.sigla}</option>
                                                     getCidades();                                                 
@@ -235,7 +244,7 @@
                                         <input type="submit" id="cadastrar" class="btn btn-primary" value="${form == "alterar" ? "ALTERAR" : "SALVAR"}" disabled>
                                     </c:if>
                                 </form>
-                                   <a href="GerenteServlet?action=list" class="btn btn-danger"> CANCELAR </a>
+                                <a href="GerenteServlet?action=list" class="btn btn-danger"> CANCELAR </a>
                             </c:when>
                             <c:otherwise>
                                 <jsp:forward page="index.jsp">
