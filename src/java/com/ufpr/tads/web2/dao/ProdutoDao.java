@@ -19,6 +19,22 @@ import java.util.List;
  */
 public class ProdutoDao {
 
+    public void adiciona(Produto p) {
+        Connection con = ConnectionFactory.getConnection();
+        String sql = ("insert into trabalho.produto(nome_produto,descricao_produto,peso_produto, id_categoria) values (?,?,?,?)");
+        try {
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, p.getNome_produto());
+            stmt.setString(2, p.getDescricao_produto());
+            stmt.setDouble(3, p.getPeso_produto());
+            stmt.setInt(4, p.getId_categoria());
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<Produto> buscaProdutos() {
         Connection con = ConnectionFactory.getConnection();
         PreparedStatement st = null;
@@ -33,7 +49,7 @@ public class ProdutoDao {
                 p.setNome_produto(rs.getString("nome_produto"));
                 p.setDescricao_produto(rs.getString("descricao_produto"));
                 p.setPeso_produto(rs.getDouble("peso_produto"));
-                p.setId_categoria(rs.getInt("id_categoria"));                
+                p.setId_categoria(rs.getInt("id_categoria"));
                 produtos.add(p);
             }
             return produtos;
@@ -54,14 +70,14 @@ public class ProdutoDao {
             }
         }
     }
-    
-    public Produto buscaProduto(int id) throws SQLException{
+
+    public Produto buscaProduto(int id) throws SQLException {
         Connection con = ConnectionFactory.getConnection();
         PreparedStatement st;
         Produto p = new Produto();
         st = con.prepareStatement("SELECT * FROM trabalho.produto where id_produto = ?");
         st.setInt(1, id);
-         ResultSet rs = st.executeQuery();
+        ResultSet rs = st.executeQuery();
         if (rs.next()) {
             p.setId_produto(rs.getInt("id_produto"));
             p.setNome_produto(rs.getString("nome_produto"));
@@ -71,13 +87,35 @@ public class ProdutoDao {
         }
         return p;
     }
-    
-     public void remove(int id) throws SQLException {
+
+    public void remove(int id) throws SQLException {
         Connection con = ConnectionFactory.getConnection();
         PreparedStatement st;
         Produto p = new Produto();
         st = con.prepareStatement("delete FROM trabalho.produto WHERE id_produto = ?");
         st.setInt(1, id);
         st.executeUpdate();
+    }
+
+    public boolean updateProd(Produto p) {
+        Connection con = ConnectionFactory.getConnection();
+        String sql = ("update trabalho.produto SET nome_produto=?,descricao_produto=?,peso_produto=?,id_categoria=? WHERE id_produto = ?");
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st = con.prepareStatement(sql);
+            st.setString(1, p.getNome_produto());
+            st.setString(2, p.getDescricao_produto());
+            st.setDouble(3, p.getPeso_produto());
+            st.setInt(4, p.getId_categoria());
+            st.setInt(5, p.getId_produto());
+            st.executeUpdate();
+            st.getResultSet();
+            return true;
+        } catch (SQLException ex) {
+            System.err.println("Erro" + ex);
+            return false;
+        } finally {
+        }
+
     }
 }

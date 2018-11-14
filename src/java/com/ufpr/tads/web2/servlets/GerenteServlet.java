@@ -120,6 +120,7 @@ public class GerenteServlet extends HttpServlet {
                 request.setAttribute("clientes", clientes);
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioFunc.jsp");
                 rd.forward(request, response);
+                
             } else if (action.equals("formUpdate")) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 request.setAttribute("form", "alterar");

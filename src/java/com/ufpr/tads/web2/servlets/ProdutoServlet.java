@@ -6,6 +6,7 @@
 package com.ufpr.tads.web2.servlets;
 
 import static com.mysql.jdbc.StringUtils.isNullOrEmpty;
+import com.ufpr.tads.web2.beans.Categoria;
 import com.ufpr.tads.web2.beans.Produto;
 import com.ufpr.tads.web2.beans.UsuarioBean;
 import com.ufpr.tads.web2.facade.AtendimentoFacade;
@@ -66,7 +67,7 @@ public class ProdutoServlet extends HttpServlet {
 
             } else if (action.equals("remover")) {
                 int id = Integer.parseInt(request.getParameter("id"));
-                AtendimentoFacade.remove(id);
+                AtendimentoFacade.removeProd(id);
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/ProdutoServlet?action=list");
                 rd.forward(request, response);
                 
@@ -76,6 +77,52 @@ public class ProdutoServlet extends HttpServlet {
                 request.setAttribute("x", p);
                 request.setAttribute("cat", CategoriaFacade.buscarCategoria(p.getId_categoria()).getNome_categoria());
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/visualizarProd.jsp");
+                rd.forward(request, response);
+                
+            }else if (action.equals("formUpdate")) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                request.setAttribute("form", "alterar");
+                Produto p = AtendimentoFacade.buscarProduto(id);
+                request.setAttribute("p", p);
+                List<Categoria> categorias = CategoriaFacade.buscarCategorias();
+                request.setAttribute("categorias", categorias);
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/produtoForm.jsp");
+                rd.forward(request, response);
+                
+            }else if (action.equals("update")) {
+                Produto p = new Produto();
+                String idS = request.getParameter("id_produto");
+                int pId = Integer.parseInt(idS.trim());
+                p.setId_produto(pId);
+                p.setNome_produto(request.getParameter("nome_produto"));
+
+                p.setDescricao_produto(request.getParameter("descricao_produto"));
+                String peso = request.getParameter("peso_produto");
+                p.setPeso_produto(Double.parseDouble(peso));
+                int ca = Integer.parseInt(request.getParameter("categoria"));
+                System.out.println(ca);
+                p.setId_categoria(ca);
+                
+                AtendimentoFacade.updateProd(p);
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/ProdutoServlet?action=list");
+                rd.forward(request, response);
+
+            }else if (action.equals("formNew")) {
+                List<Categoria> categorias = CategoriaFacade.buscarCategorias();
+                request.setAttribute("categorias", categorias);
+                request.setAttribute("form", null);
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/produtoForm.jsp");
+                rd.forward(request, response);
+                
+            }else if (action.equals("new")) {
+                Produto p = new Produto();
+                 p.setNome_produto(request.getParameter("nome_produto"));
+                p.setDescricao_produto(request.getParameter("descricao_produto"));
+                String peso = request.getParameter("peso_produto");
+                p.setPeso_produto(Double.parseDouble(peso));                
+                p.setId_categoria(Integer.parseInt(request.getParameter("categoria")));
+                AtendimentoFacade.inserirProd(p);
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/ProdutoServlet?action=list");
                 rd.forward(request, response);
             }
         }

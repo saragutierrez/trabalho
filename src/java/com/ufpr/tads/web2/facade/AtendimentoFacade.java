@@ -35,6 +35,18 @@ public class AtendimentoFacade {
         ProdutoDao p = new ProdutoDao();
         p.remove(id);
     }
+    
+    public static boolean updateProd(Produto c) throws SQLException {
+        ProdutoDao pDao = new ProdutoDao();
+        boolean deuBoa;
+        deuBoa = pDao.updateProd(c);
+        return deuBoa;
+    }
+    
+    public static void inserirProd(Produto c){
+       ProdutoDao pDao = new ProdutoDao();
+       pDao.adiciona(c);
+   }
 //    
 //    public static List<Atendimento> buscarAtendimentos(int id){
 //        AtendimentoDao at = new AtendimentoDao();
