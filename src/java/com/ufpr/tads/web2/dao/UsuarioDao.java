@@ -239,7 +239,7 @@ public class UsuarioDao {
 
     public boolean update(UsuarioBean c) {
         Connection con = ConnectionFactory.getConnection();
-        String sql = ("update trabalho.usuario SET nome=?,tipo=?,cpf=?,email=?,tel=?,rua=?,nr_casa=?,complemento=?,cep=?,id_cidade = ?,senha=? WHERE id = ?");
+        String sql = ("update trabalho.usuario SET nome=?,tipo=?,cpf=?,email=?,tel=?,rua=?,nr_casa=?,complemento=?,cep=?,id_cidade = ? WHERE id = ?");
         try {
             PreparedStatement st = con.prepareStatement(sql);
             st = con.prepareStatement(sql);
@@ -253,8 +253,8 @@ public class UsuarioDao {
             st.setString(8, c.getComplemento());
             st.setString(9, c.getCep());
             st.setInt(10, c.getId_cidade());
-            st.setString(11, Criptografia.criptografar(c.getSenha()));
-            st.setInt(12, c.getId());
+//            st.setString(11, Criptografia.criptografar(c.getSenha()));
+            st.setInt(11, c.getId());
             st.executeUpdate();
             st.getResultSet();
             return true;

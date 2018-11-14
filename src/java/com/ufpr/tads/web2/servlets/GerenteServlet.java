@@ -154,7 +154,7 @@ public class GerenteServlet extends HttpServlet {
                 cidade.setEstado(estado);
                 c.setId_cidade(city);
                 c.setTipo(request.getParameter("tipo"));
-                c.setSenha(request.getParameter("senha"));
+//                c.setSenha(request.getParameter("senha"));
                 UsuarioFacade.update(c);
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/GerenteServlet?action=listFuncionarios");
                 rd.forward(request, response);
@@ -167,7 +167,7 @@ public class GerenteServlet extends HttpServlet {
             } else if (action.equals("show")) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 request.setAttribute("x", UsuarioFacade.show(id));
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/visualizarFuncionario.jsp");
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/visualizarFunc.jsp");
                 rd.forward(request, response);
 
             } else if (action.equals("formNew")) {
