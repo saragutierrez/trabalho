@@ -85,6 +85,7 @@ public class AtendimentoServlet extends HttpServlet {
                     request.setAttribute("produto", produto);
                     request.setAttribute("cliente", cliente);
                     request.setAttribute("tipoA", tipoA);
+                    request.setAttribute("resolver",null);
                     RequestDispatcher rd = getServletContext().getRequestDispatcher("/atendimentoDetalhes.jsp");
                     rd.forward(request, response);
                 }else if (action.equals("remover")) {
@@ -92,6 +93,28 @@ public class AtendimentoServlet extends HttpServlet {
                     AtendimentoFacade.remove(id);            
                     RequestDispatcher rd = getServletContext().getRequestDispatcher("/ClientesServlet?action=list");
                     rd.forward(request, response);
+                    
+                }else if (action.equals("formResolver")) {
+                    int idA = Integer.parseInt(request.getParameter("id"));
+                    Atendimento at = AtendimentoFacade.show(idA);
+                    String produto = AtendimentoFacade.buscarProduto(at.getId_produto()).getNome_produto();
+                    String cliente = UsuarioFacade.show(at.getId_cliente()).getNome();
+                    String tipoA = AtendimentoFacade.buscarTipoAtendimento(at.getId_tipo_atendimento()).getNome_tipoAt();
+                    request.setAttribute("x", at);
+                    request.setAttribute("produto", produto);
+                    request.setAttribute("cliente", cliente);
+                    request.setAttribute("tipoA", tipoA);
+                    request.setAttribute("resolver","resolver");
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/atendimentoDetalhes.jsp");
+                    rd.forward(request, response);
+                    
+                }else if (action.equals("resolver")) {
+                    int id = Integer.parseInt(request.getParameter("id"));
+                    Atendimento a = AtendimentoFacade.show(id);
+                    AtendimentoFacade.resolver(a);            
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/FuncionarioServlet?action=list");
+                    rd.forward(request, response);
+                    
                 }else if (action.equals("formNew")) {
                     List<Produto> produtos = AtendimentoFacade.buscarProdutos();
                     List<TipoAtendimento> ta = AtendimentoFacade.buscarTiposAtendimento();

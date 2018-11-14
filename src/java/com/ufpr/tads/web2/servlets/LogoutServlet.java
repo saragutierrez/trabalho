@@ -38,13 +38,14 @@ public class LogoutServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             HttpSession session = request.getSession();
-            String nome = (String) session.getAttribute("nomee");
+//            String nome = (String) session.getAttribute("nomee");
+            String action = request.getParameter("action");
             if (session != null) {
                     session.invalidate();
             }
-            if (StringUtils.isNullOrEmpty(nome)) {
+            if (action.equals("newC")) {
                 RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-                request.setAttribute("msg", "Usuário deve se autenticar para poder fazer logout");
+                request.setAttribute("msg", "Usuário deve fazer o login para confirmar o cadastro!");
                 rd.forward(request, response);
             } else {
                 

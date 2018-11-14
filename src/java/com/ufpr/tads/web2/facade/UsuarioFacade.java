@@ -68,6 +68,13 @@ public class UsuarioFacade {
         return deuBoa;
     }
     
+    public static boolean updateC(UsuarioBean c) throws SQLException {
+        UsuarioDao cDao = new UsuarioDao();
+        boolean deuBoa;
+        deuBoa = cDao.updateC(c);
+        return deuBoa;
+    }
+    
     public static void remove(int id) throws SQLException {
         UsuarioDao cDao = new UsuarioDao();
         cDao.removeUser(id);

@@ -94,6 +94,26 @@ public class AtendimentoDao {
         st.executeUpdate();
     }
     
+    public boolean resolver(Atendimento a) {
+        Connection con = ConnectionFactory.getConnection();
+        String sql = ("update trabalho.atendimento SET solucao=?,situacao=? WHERE id_atendimento = ?");
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st = con.prepareStatement(sql); 
+            st.setString(1,a.getSolucao());
+            st.setString(2, "finalizado");
+            st.setInt(3, a.getId_atendimento());
+            st.executeUpdate();
+            st.getResultSet();
+            return true;
+        } catch (SQLException ex) {
+            System.err.println("Erro" + ex);
+            return false;
+        } finally {
+        }
+
+    }
+    
     public List<Atendimento> buscarAtendimentosNaoResolvidos() throws SQLException {
         List<Atendimento> resultados = new ArrayList<>();
         Connection con = ConnectionFactory.getConnection();

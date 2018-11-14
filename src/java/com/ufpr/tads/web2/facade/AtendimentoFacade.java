@@ -36,6 +36,11 @@ public class AtendimentoFacade {
         p.remove(id);
     }
     
+    public static void resolver(Atendimento a) throws SQLException{
+        AtendimentoDao at = new AtendimentoDao();
+        at.resolver(a);
+    }
+    
     public static boolean updateProd(Produto c) throws SQLException {
         ProdutoDao pDao = new ProdutoDao();
         boolean deuBoa;

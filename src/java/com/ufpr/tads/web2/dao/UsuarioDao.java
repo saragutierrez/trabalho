@@ -265,5 +265,31 @@ public class UsuarioDao {
         }
 
     }
+    
+    public boolean updateC(UsuarioBean c) {
+        Connection con = ConnectionFactory.getConnection();
+        String sql = ("update trabalho.usuario SET nome=?,tel=?,rua=?,nr_casa=?,complemento=?,cep=?,id_cidade = ?,senha=? WHERE id = ?");
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st = con.prepareStatement(sql);
+            st.setString(1, c.getNome());
+            st.setString(2, c.getTel());
+            st.setString(3, c.getRua());
+            st.setInt(4, c.getNr_casa());
+            st.setString(5, c.getComplemento());
+            st.setString(6, c.getCep());
+            st.setInt(7, c.getId_cidade());
+            st.setString(8, Criptografia.criptografar(c.getSenha()));
+            st.setInt(9, c.getId());
+            st.executeUpdate();
+            st.getResultSet();
+            return true;
+        } catch (SQLException ex) {
+            System.err.println("Erro" + ex);
+            return false;
+        } finally {
+        }
+
+    }
 
 }
