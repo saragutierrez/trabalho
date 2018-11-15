@@ -22,7 +22,7 @@ public class UsuarioDao {
 
     public void adiciona(UsuarioBean usuario) {
         Connection con = ConnectionFactory.getConnection();
-        String sql = ("insert into trabalho.usuario (nome,tipo,cpf,email,tel,rua,nr_casa,complemento,cep,id_cidade,senha) values (?,?,?,?,?,?,?,?,?,?,?)");
+        String sql = ("insert into trabalho.tb_usuario (nome,tipo,cpf,email,tel,rua,nr_casa,complemento,cep,id_cidade,senha) values (?,?,?,?,?,?,?,?,?,?,?)");
         try {
             // prepared statement para inserção
             PreparedStatement stmt = con.prepareStatement(sql);

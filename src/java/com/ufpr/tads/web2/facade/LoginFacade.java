@@ -19,7 +19,12 @@ public class LoginFacade {
 
     public static UsuarioBean busca(String login, String senha) throws SQLException, NoSuchAlgorithmException, UnsupportedEncodingException {
         LoginDao uDao = new LoginDao();
-        UsuarioBean retorno = uDao.BuscaUser(login, senha);
+        UsuarioBean retorno = null;
+        try{
+            retorno = uDao.BuscaUser(login, senha);
+        }catch(NullPointerException e){
+            System.err.println("LoginFacade-> retorno \'Null\'");
+        }
         return retorno;
     }
 }

@@ -43,16 +43,11 @@ public class LogoutServlet extends HttpServlet {
             if (session != null) {
                     session.invalidate();
             }
-            if (action.equals("newC")) {
-                RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-                request.setAttribute("msg", "Usuário deve fazer o login para confirmar o cadastro!");
-                rd.forward(request, response);
-            } else {
-                
-                RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-                request.setAttribute("msg", "Usuário desconectado com sucesso");
-                rd.forward(request, response);
-            }
+
+            RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+            request.setAttribute("msg", "Usuário desconectado com sucesso");
+            rd.forward(request, response);
+            
         }
     }
 

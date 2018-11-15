@@ -6,6 +6,7 @@
 package com.ufpr.tads.web2.servlets;
 
 import com.ufpr.tads.web2.beans.UsuarioBean;
+import com.ufpr.tads.web2.exceptions.UsuarioSenhaInvalidosException;
 import com.ufpr.tads.web2.facade.LoginFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -43,17 +44,27 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException, SQLException, NoSuchAlgorithmException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            HttpSession session = request.getSession();
             String login = request.getParameter("login");
             String senha = request.getParameter("senha");
-            UsuarioBean log = LoginFacade.busca(login, senha);            
-            if (log.getNome() == null || log.getNome().isEmpty()) {            
+            try{
+                UsuarioBean log = LoginFacade.busca(login, senha);   
+                if(log == null){
+                    throw new UsuarioSenhaInvalidosException();
+                }else{
+                    HttpSession session = request.getSession();
+                    if (log.getNome() == null || log.getNome().isEmpty()) {            
+                        RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
+                        request.setAttribute("msg", "Usuário/Senha inválidos");
+                        rd.forward(request, response);
+                    } else {
+                        session.setAttribute("loginBean", log);
+                        response.sendRedirect("portal.jsp");
+                    }
+                }
+            }catch(UsuarioSenhaInvalidosException e){
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
                 request.setAttribute("msg", "Usuário/Senha inválidos");
                 rd.forward(request, response);
-            } else {
-                session.setAttribute("loginBean", log);
-                response.sendRedirect("portal.jsp");
             }
         }
     }
