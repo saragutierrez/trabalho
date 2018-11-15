@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.23, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.24, for Linux (x86_64)
 --
--- Host: localhost    Database: teste
+-- Host: localhost    Database: trabalho
 -- ------------------------------------------------------
--- Server version	5.7.23-0ubuntu0.16.04.1
+-- Server version	5.7.24-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,27 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tb_tipoAt`
+-- Table structure for table `cidade`
 --
 
-DROP TABLE IF EXISTS `tb_tipoAt`;
+DROP TABLE IF EXISTS `cidade`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tb_tipoAt` (
-  `id_tipo_atendimento` int(11) NOT NULL AUTO_INCREMENT,
-  `nome_tipo_atendimento` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id_tipo_atendimento`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+CREATE TABLE `cidade` (
+  `id_cidade` int(11) NOT NULL AUTO_INCREMENT,
+  `nome_cidade` varchar(45) DEFAULT NULL,
+  `id_estado` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_cidade`),
+  KEY `id_estado_idx` (`id_estado`),
+  CONSTRAINT `id_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id_estado`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tb_tipoAt`
+-- Dumping data for table `cidade`
 --
 
-LOCK TABLES `tb_tipoAt` WRITE;
-/*!40000 ALTER TABLE `tb_tipoAt` DISABLE KEYS */;
-INSERT INTO `tb_tipoAt` VALUES (1,'venda'),(2,'relamacao'),(3,'troca'),(4,'devolucao');
-/*!40000 ALTER TABLE `tb_tipoAt` ENABLE KEYS */;
+LOCK TABLES `cidade` WRITE;
+/*!40000 ALTER TABLE `cidade` DISABLE KEYS */;
+INSERT INTO `cidade` VALUES (1,'Curitiba',21),(2,'Matinhos',21),(3,'Porto Alegre',23),(4,'Itapema',22),(5,'Paasso Fundo',23),(6,'Tubarão',22);
+/*!40000 ALTER TABLE `cidade` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -48,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-07 23:30:23
+-- Dump completed on 2018-11-15 15:18:50

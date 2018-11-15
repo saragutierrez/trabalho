@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.23, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.24, for Linux (x86_64)
 --
--- Host: localhost    Database: teste
+-- Host: localhost    Database: trabalho
 -- ------------------------------------------------------
--- Server version	5.7.23-0ubuntu0.16.04.1
+-- Server version	5.7.24-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,30 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tb_cidade`
+-- Table structure for table `produto`
 --
 
-DROP TABLE IF EXISTS `tb_cidade`;
+DROP TABLE IF EXISTS `produto`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tb_cidade` (
-  `id_cidade` int(11) NOT NULL AUTO_INCREMENT,
-  `nome_cidade` varchar(100) DEFAULT NULL,
-  `id_estado` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id_cidade`),
-  KEY `id_estado_idx` (`id_estado`),
-  CONSTRAINT `id_estado` FOREIGN KEY (`id_estado`) REFERENCES `tb_estado` (`id_estado`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+CREATE TABLE `produto` (
+  `id_produto` int(11) NOT NULL AUTO_INCREMENT,
+  `nome_produto` varchar(45) DEFAULT NULL,
+  `descricao_produto` varchar(45) DEFAULT NULL,
+  `peso_produto` float DEFAULT NULL,
+  `id_categoria` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_produto`),
+  KEY `id_categoria_idx` (`id_categoria`),
+  CONSTRAINT `id_categoria` FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id_categoria`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tb_cidade`
+-- Dumping data for table `produto`
 --
 
-LOCK TABLES `tb_cidade` WRITE;
-/*!40000 ALTER TABLE `tb_cidade` DISABLE KEYS */;
-INSERT INTO `tb_cidade` VALUES (1,'Curitiba',1),(2,'Itapema',2),(3,'Rio do Sul',2),(4,'Porto Alegre',3),(5,'Passo Fundo',3);
-/*!40000 ALTER TABLE `tb_cidade` ENABLE KEYS */;
+LOCK TABLES `produto` WRITE;
+/*!40000 ALTER TABLE `produto` DISABLE KEYS */;
+INSERT INTO `produto` VALUES (1,'Shampoo','Dove',2.5,1),(3,'teste','dsd',3,6);
+/*!40000 ALTER TABLE `produto` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-07 23:30:23
+-- Dump completed on 2018-11-15 15:18:50

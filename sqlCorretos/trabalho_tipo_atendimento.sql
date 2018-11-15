@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.23, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.24, for Linux (x86_64)
 --
--- Host: localhost    Database: teste
+-- Host: localhost    Database: trabalho
 -- ------------------------------------------------------
--- Server version	5.7.23-0ubuntu0.16.04.1
+-- Server version	5.7.24-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,31 +16,27 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tb_usuario`
+-- Table structure for table `tipo_atendimento`
 --
 
-DROP TABLE IF EXISTS `tb_usuario`;
+DROP TABLE IF EXISTS `tipo_atendimento`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tb_usuario` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(255) DEFAULT NULL,
-  `sexo` varchar(1) DEFAULT NULL,
-  `senha` varchar(45) DEFAULT NULL,
-  `login` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `login_UNIQUE` (`login`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+CREATE TABLE `tipo_atendimento` (
+  `id_tipoAt` int(11) NOT NULL AUTO_INCREMENT,
+  `nome_tipoAt` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id_tipoAt`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tb_usuario`
+-- Dumping data for table `tipo_atendimento`
 --
 
-LOCK TABLES `tb_usuario` WRITE;
-/*!40000 ALTER TABLE `tb_usuario` DISABLE KEYS */;
-INSERT INTO `tb_usuario` VALUES (1,'Ana','F','202CB962AC59075B964B07152D234B70','analog'),(2,'Pedro','M','202CB962AC59075B964B07152D234B70','pedrolog'),(3,'Jose','M','202CB962AC59075B964B07152D234B70','joselog'),(8,'teste','M','03C7C0ACE395D80182DB07AE2C30F034','teste'),(10,'das','M','38851536D87701D2191990E24A7F8D4E','teste2'),(11,'dd','F','38851536D87701D2191990E24A7F8D4E','iii'),(12,'ee','F','36347412C7D30AE6FDE3742BBC4F21B9','ee'),(13,'qq','M','099B3B060154898840F0EBDFB46EC78F','qq');
-/*!40000 ALTER TABLE `tb_usuario` ENABLE KEYS */;
+LOCK TABLES `tipo_atendimento` WRITE;
+/*!40000 ALTER TABLE `tipo_atendimento` DISABLE KEYS */;
+INSERT INTO `tipo_atendimento` VALUES (1,'Reclamacao'),(2,'Venda');
+/*!40000 ALTER TABLE `tipo_atendimento` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-07 23:30:23
+-- Dump completed on 2018-11-15 15:18:50
