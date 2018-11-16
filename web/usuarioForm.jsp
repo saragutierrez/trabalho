@@ -13,7 +13,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Cadastro</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
         <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
@@ -135,7 +135,10 @@
             <div class="row">
                 <div class="col-md-12">
                     <c:choose>
-                        <c:when test = "${not empty loginBean.tipo}">                            
+                        <c:when test = "${not empty loginBean.tipo || not empty logB}">                            
+                            <c:if test="${!empty msg}">
+                                <div class="alert alert-danger" role="alert"><h2 style= color:red;text-align:center>${msg}</h2></div>
+                            </c:if>
                             <c:if test = "${form == 'alterar'}">
                                 <form class="form-group" action="GerenteServlet?action=update" method="POST">  
                                     <h1 style="text-align: center; color: red">ALTERAR </h1>

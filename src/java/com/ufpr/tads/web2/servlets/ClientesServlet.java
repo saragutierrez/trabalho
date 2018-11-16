@@ -11,6 +11,7 @@ import com.ufpr.tads.web2.beans.CidadeBean;
 import com.ufpr.tads.web2.beans.EstadoBean;
 import com.ufpr.tads.web2.beans.UsuarioBean;
 import com.ufpr.tads.web2.dao.UsuarioDao;
+import com.ufpr.tads.web2.exceptions.ErroInserindoClienteException;
 import com.ufpr.tads.web2.facade.AtendimentoFacade;
 import com.ufpr.tads.web2.facade.ClientesFacade;
 import com.ufpr.tads.web2.facade.UsuarioFacade;
@@ -56,194 +57,232 @@ public class ClientesServlet extends HttpServlet {
             HttpSession session = request.getSession();
             UsuarioBean logB = (UsuarioBean) session.getAttribute("loginBean");
             String action = request.getParameter("action");
-            if ((logB.getNome() == null || logB.getNome().isEmpty()) && !action.equals("cadastro")) {
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
-                request.setAttribute("msg", "Usuário deve se autenticar para acessar o sistema");
-                rd.forward(request, response);
-            } else {
-                if ((isNullOrEmpty(action)) || action.equals("list")) {
-                    System.out.println(logB.getId());
-                    List<Atendimento> atendimentos = AtendimentoFacade.listAtendimentosCli(logB.getId());
-                    List<String> produtos = new ArrayList<>();
-                    List<String> clientes = new ArrayList<>();
-                    for (Atendimento a : atendimentos) {
-                        String p = AtendimentoFacade.buscarProduto(a.getId_produto()).getNome_produto();
-                        String c = UsuarioFacade.show(a.getId_cliente()).getNome();
-                        produtos.add(p);
-                        clientes.add(c);
-                    }
-                    request.setAttribute("atendimentos", atendimentos);//NaoResolvidos
-                    request.setAttribute("produtos", produtos);
-                    request.setAttribute("clientes", clientes);
-                    request.setAttribute("atendimentos", AtendimentoFacade.listAtendimentosCli(logB.getId()));
-                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioFunc.jsp");
-                    rd.forward(request, response);
-
-                } else if (action.equals("formUpdate")) {
-                    int id = Integer.parseInt(request.getParameter("id"));
-                    System.out.println(id);
-                    request.setAttribute("form", "alterarC");
-                    UsuarioBean u = UsuarioFacade.show(id);
-                    request.setAttribute("c", u);
-                    List<EstadoBean> estados = UsuarioFacade.buscarEstados();
-                    List<CidadeBean> cidades = UsuarioFacade.buscarCidades(u.getEstado().getId());
-                    request.setAttribute("estados", estados);
-                    request.setAttribute("cidades", cidades);
-                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/usuarioForm.jsp");
-                    rd.forward(request, response);
-                    
-                } else if (action.equals("update")) {
-                    UsuarioBean c = new UsuarioBean();
-                    String idS = request.getParameter("id");                    
-                    int convId = Integer.parseInt(idS.trim());
-                    c.setId(convId);
-//                    System.out.println(idS);
-                    c.setNome(request.getParameter("nome"));
-//                    c.setCpf(request.getParameter("cpf"));
-//                    c.setEmail(request.getParameter("email"));
-                    c.setTel(request.getParameter("tel"));
-                    c.setRua(request.getParameter("rua"));
-                    String numS = request.getParameter("nr_cliente");
-                    c.setComplemento(request.getParameter("complemento"));
-                    c.setCep(request.getParameter("cep"));
-                    int numI = Integer.parseInt(numS);
-                    c.setNr_casa(numI);
-//                    System.out.println(numI);
-                    CidadeBean cidade = new CidadeBean();
-                    EstadoBean estado = new EstadoBean();
-                    int city = Integer.parseInt(request.getParameter("cidade"));
-                    cidade.setEstado(estado);
-                    c.setId_cidade(city);
-//                    c.setTipo(request.getParameter("tipo"));
-                    c.setSenha(request.getParameter("senha"));
-//                    System.out.println(c.getSenha());
-                    UsuarioFacade.updateC(c);
-                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/ClientesServlet?action=list");
-                    rd.forward(request, response);
-                } else if (action.equals("cadastro")) {
-                    UsuarioBean log = new UsuarioBean();
-                    log.setTipo("C");
-                    List<EstadoBean> estados = UsuarioFacade.buscarEstados();
-                    request.setAttribute("estados", estados);
-                    request.setAttribute("logB", log);
-                    request.setAttribute("form", "newC");
-                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/usuarioForm.jsp");
-                    rd.forward(request, response);
-                } else if (action.equals("new")) {
-                    UsuarioBean c = new UsuarioBean();
-                    c.setNome(request.getParameter("nome"));
-                    c.setCpf(request.getParameter("cpf"));
-                    c.setEmail(request.getParameter("email"));
-                    c.setTel(request.getParameter("tel"));
-                    c.setRua(request.getParameter("rua"));
-                    String numS = request.getParameter("nr_cliente");
-                    c.setComplemento(request.getParameter("complemento"));
-                    c.setCep(request.getParameter("cep"));
-                    int numI = Integer.parseInt(numS);
-                    c.setNr_casa(numI);
-                    CidadeBean cidade = new CidadeBean();
-                    EstadoBean estado = new EstadoBean();
-                    int city = Integer.parseInt(request.getParameter("cidade"));
-                    cidade.setEstado(estado);
-                    c.setId_cidade(city);
-                    c.setTipo("C");
-                    c.setSenha(request.getParameter("senha"));
-                    UsuarioFacade.inserir(c);
-                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/LogoutServlet?action=newC");
-                    rd.forward(request, response);
-
-//                } else if (action.equals("show")) {
-//                    int id = Integer.parseInt(request.getParameter("id"));
-//                    request.setAttribute("c", ClientesFacade.show(id));
-//                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/clientesVisualizar.jsp");
-//                    rd.forward(request, response);
-//                } else if (action.equals("formUpdate")) {
-//                    int id = Integer.parseInt(request.getParameter("id"));                                      
-//                    request.setAttribute("form","alterar");
-//                    Cliente cli = ClientesFacade.show(id);
-//                    request.setAttribute("c", cli);
-////                    cli.getId_cidade();
-//                    List<EstadoBean> estados = ClientesFacade.buscarEstados();  
-//                    List<CidadeBean> cidades = ClientesFacade.buscarCidades(cli.getEstado().getId());
-//                    request.setAttribute("estados", estados);
-//                    request.setAttribute("cidades", cidades);
-//                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/clientesForm.jsp");
-//                    rd.forward(request, response);
-//                } else if (action.equals("remove")) {
-//                    int id = Integer.parseInt(request.getParameter("id"));
-//                    ClientesFacade.remove(id);
-//                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/ClientesServlet?action=list");
-//                    rd.forward(request, response);
-//                } else if (action.equals("update")) {
-//                    UsuarioDao cDao = new UsuarioDao();
-//                    Cliente c = new Cliente();
-//                    String idS = request.getParameter("id");
-//                    int convId = Integer.parseInt(idS.trim());
-//                    c.setId(convId);
-//                    c.setNome(request.getParameter("nome"));
-//                    c.setEmail(request.getParameter("email"));
-//                    String str = request.getParameter("data");
-//                    Date data = null;
-//                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-//                    data = format.parse(str);
-//                    String numS = request.getParameter("nr_cliente");
-//                    int numI = Integer.parseInt(numS);
-//                    c.setNr_cliente(numI);
-//                    c.setRua(request.getParameter("rua"));
-//                    c.setCpf(request.getParameter("cpf"));
-////                    System.out.println(c.getCpf());
-//                    c.setCep(request.getParameter("cep"));
-//                    int city = Integer.parseInt(request.getParameter("cidade"));
-//                    c.setId_cidade(city);
-//                    c.setData(data);
-//                    out.println(ClientesFacade.update(c));
-//                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/ClientesServlet?action=list");
-//                    rd.forward(request, response);
-//                } else if (action.equals("formNew")) {
-//                    List<EstadoBean> estados = ClientesFacade.buscarEstados();
-//                    request.setAttribute("estados", estados);
-//                    request.setAttribute("form",null);
-//                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/clientesForm.jsp");
-//                    rd.forward(request, response);
-//                } else if (action.equals("new")) {
-////                    UsuarioDao cDao = new UsuarioDao();
-//                    Cliente c = new Cliente();
-//                    c.setNome(request.getParameter("nome"));
-//                    c.setEmail(request.getParameter("email"));
-//                    String str = request.getParameter("data");
-//                    Date data = null;
-//                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-//                    data = format.parse(str);
-//                    String numS = request.getParameter("nr_cliente");
-//                    int numI = Integer.parseInt(numS);
-//                    c.setNr_cliente(numI);
-//                    c.setRua(request.getParameter("rua"));
-//                    CidadeBean cidade = new CidadeBean();
-//                    EstadoBean estado = new EstadoBean();
-////                    c.setCidade(request.getParameter("cidade"));
-////                    c.setUf(request.getParameter("uf"));
-//                    int city = Integer.parseInt(request.getParameter("cidade"));
-//                    int est = Integer.parseInt(request.getParameter("estado"));
-////                    out.println(city);
-////                    out.println(est);                    
-////                    cidade.setId(city);
-////                    estado.setId(est);
-////                    cidade.setEstado(estado);                    
-////                    c.setId_cidade(city);
-//                    c.setId_cidade(city);
-////                    out.println(c.getId_cidade());
-//                    c.setCpf(request.getParameter("cpf"));
-//                    c.setCep(request.getParameter("cep"));
-//                    c.setData(data);
-////                    out.println(c.getNome());
-//                    ClientesFacade.inserir(c);
-//                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/ClientesServlet?action=list");
-//                    rd.forward(request, response);
-//                } else {
-//                    out.print("aff  " + action);
-//                }
-//            }
+            try{
+                if(action == null){
+                    action = "";
                 }
+
+
+                if (action.equals("cadastro")) {//(logB.getNome() == null || logB.getNome().isEmpty()) && !
+                    UsuarioBean log = new UsuarioBean();
+                        try{
+                            logB.getTipo();
+                        }catch(NullPointerException e){
+                            if((String) request.getAttribute("msg") != null){
+                                String msg =(String) request.getAttribute("msg");
+                                request.setAttribute("msg", msg);
+                                System.out.println("setou");
+                            }else{
+                                System.out.println("passou");
+                            }
+                            
+                            log.setTipo("C");
+                            List<EstadoBean> estados = UsuarioFacade.buscarEstados();
+                            request.setAttribute("estados", estados);
+                            request.setAttribute("logB", log);
+                            request.setAttribute("form", "newC");
+                            RequestDispatcher rd = getServletContext().getRequestDispatcher("/usuarioForm.jsp");
+                            rd.forward(request, response);
+                        }
+
+                    /*
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
+                    request.setAttribute("msg", "Usuário deve se autenticar para acessar o sistema");
+                    rd.forward(request, response);
+                        */
+                } else {
+                    if ((isNullOrEmpty(action)) || action.equals("list")) {
+                        System.out.println(logB.getId());
+                        List<Atendimento> atendimentos = AtendimentoFacade.listAtendimentosCli(logB.getId());
+                        List<String> produtos = new ArrayList<>();
+                        List<String> clientes = new ArrayList<>();
+                        for (Atendimento a : atendimentos) {
+                            String p = AtendimentoFacade.buscarProduto(a.getId_produto()).getNome_produto();
+                            String c = UsuarioFacade.show(a.getId_cliente()).getNome();
+                            produtos.add(p);
+                            clientes.add(c);
+                        }
+                        request.setAttribute("atendimentos", atendimentos);//NaoResolvidos
+                        request.setAttribute("produtos", produtos);
+                        request.setAttribute("clientes", clientes);
+                        request.setAttribute("atendimentos", AtendimentoFacade.listAtendimentosCli(logB.getId()));
+                        RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioFunc.jsp");
+                        rd.forward(request, response);
+
+                    } else if (action.equals("formUpdate")) {
+                        int id = Integer.parseInt(request.getParameter("id"));
+                        System.out.println(id);
+                        request.setAttribute("form", "alterarC");
+                        UsuarioBean u = UsuarioFacade.show(id);
+                        request.setAttribute("c", u);
+                        List<EstadoBean> estados = UsuarioFacade.buscarEstados();
+                        List<CidadeBean> cidades = UsuarioFacade.buscarCidades(u.getEstado().getId());
+                        request.setAttribute("estados", estados);
+                        request.setAttribute("cidades", cidades);
+                        RequestDispatcher rd = getServletContext().getRequestDispatcher("/usuarioForm.jsp");
+                        rd.forward(request, response);
+
+                    } else if (action.equals("update")) {
+                        UsuarioBean c = new UsuarioBean();
+                        String idS = request.getParameter("id");                    
+                        int convId = Integer.parseInt(idS.trim());
+                        c.setId(convId);
+    //                    System.out.println(idS);
+                        c.setNome(request.getParameter("nome"));
+    //                    c.setCpf(request.getParameter("cpf"));
+    //                    c.setEmail(request.getParameter("email"));
+                        c.setTel(request.getParameter("tel"));
+                        c.setRua(request.getParameter("rua"));
+                        String numS = request.getParameter("nr_cliente");
+                        c.setComplemento(request.getParameter("complemento"));
+                        c.setCep(request.getParameter("cep"));
+                        int numI = Integer.parseInt(numS);
+                        c.setNr_casa(numI);
+    //                    System.out.println(numI);
+                        CidadeBean cidade = new CidadeBean();
+                        EstadoBean estado = new EstadoBean();
+                        int city = Integer.parseInt(request.getParameter("cidade"));
+                        cidade.setEstado(estado);
+                        c.setId_cidade(city);
+    //                    c.setTipo(request.getParameter("tipo"));
+                        c.setSenha(request.getParameter("senha"));
+    //                    System.out.println(c.getSenha());
+                        UsuarioFacade.updateC(c);
+                        RequestDispatcher rd = getServletContext().getRequestDispatcher("/ClientesServlet?action=list");
+                        rd.forward(request, response);
+                    } else if (action.equals("cadastro")) {
+                        UsuarioBean log = new UsuarioBean();
+                        log.setTipo("C");
+                        List<EstadoBean> estados = UsuarioFacade.buscarEstados();
+                        request.setAttribute("estados", estados);
+                        request.setAttribute("logB", log);
+                        request.setAttribute("form", "newC");
+                        RequestDispatcher rd = getServletContext().getRequestDispatcher("/usuarioForm.jsp");
+                        rd.forward(request, response);
+                    } else if (action.equals("new")) {
+                        boolean verifica;
+                        UsuarioBean c = new UsuarioBean();
+                        c.setNome(request.getParameter("nome"));
+                        c.setCpf(request.getParameter("cpf"));
+                        c.setEmail(request.getParameter("email"));
+                        c.setTel(request.getParameter("tel"));
+                        c.setRua(request.getParameter("rua"));
+                        String numS = request.getParameter("nr_cliente");
+                        c.setComplemento(request.getParameter("complemento"));
+                        c.setCep(request.getParameter("cep"));
+                        int numI = Integer.parseInt(numS);
+                        c.setNr_casa(numI);
+                        CidadeBean cidade = new CidadeBean();
+                        EstadoBean estado = new EstadoBean();
+                        int city = Integer.parseInt(request.getParameter("cidade"));
+                        cidade.setEstado(estado);
+                        c.setId_cidade(city);
+                        c.setTipo("C");
+                        c.setSenha(request.getParameter("senha"));
+                        verifica = UsuarioFacade.inserir(c);
+                        if(verifica == false){
+                            throw new ErroInserindoClienteException("Erro ao inserir Cliente!");
+                        }
+                        RequestDispatcher rd = getServletContext().getRequestDispatcher("/LogoutServlet?action=newC");
+                        rd.forward(request, response);
+
+    //                } else if (action.equals("show")) {
+    //                    int id = Integer.parseInt(request.getParameter("id"));
+    //                    request.setAttribute("c", ClientesFacade.show(id));
+    //                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/clientesVisualizar.jsp");
+    //                    rd.forward(request, response);
+    //                } else if (action.equals("formUpdate")) {
+    //                    int id = Integer.parseInt(request.getParameter("id"));                                      
+    //                    request.setAttribute("form","alterar");
+    //                    Cliente cli = ClientesFacade.show(id);
+    //                    request.setAttribute("c", cli);
+    ////                    cli.getId_cidade();
+    //                    List<EstadoBean> estados = ClientesFacade.buscarEstados();  
+    //                    List<CidadeBean> cidades = ClientesFacade.buscarCidades(cli.getEstado().getId());
+    //                    request.setAttribute("estados", estados);
+    //                    request.setAttribute("cidades", cidades);
+    //                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/clientesForm.jsp");
+    //                    rd.forward(request, response);
+    //                } else if (action.equals("remove")) {
+    //                    int id = Integer.parseInt(request.getParameter("id"));
+    //                    ClientesFacade.remove(id);
+    //                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/ClientesServlet?action=list");
+    //                    rd.forward(request, response);
+    //                } else if (action.equals("update")) {
+    //                    UsuarioDao cDao = new UsuarioDao();
+    //                    Cliente c = new Cliente();
+    //                    String idS = request.getParameter("id");
+    //                    int convId = Integer.parseInt(idS.trim());
+    //                    c.setId(convId);
+    //                    c.setNome(request.getParameter("nome"));
+    //                    c.setEmail(request.getParameter("email"));
+    //                    String str = request.getParameter("data");
+    //                    Date data = null;
+    //                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+    //                    data = format.parse(str);
+    //                    String numS = request.getParameter("nr_cliente");
+    //                    int numI = Integer.parseInt(numS);
+    //                    c.setNr_cliente(numI);
+    //                    c.setRua(request.getParameter("rua"));
+    //                    c.setCpf(request.getParameter("cpf"));
+    ////                    System.out.println(c.getCpf());
+    //                    c.setCep(request.getParameter("cep"));
+    //                    int city = Integer.parseInt(request.getParameter("cidade"));
+    //                    c.setId_cidade(city);
+    //                    c.setData(data);
+    //                    out.println(ClientesFacade.update(c));
+    //                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/ClientesServlet?action=list");
+    //                    rd.forward(request, response);
+    //                } else if (action.equals("formNew")) {
+    //                    List<EstadoBean> estados = ClientesFacade.buscarEstados();
+    //                    request.setAttribute("estados", estados);
+    //                    request.setAttribute("form",null);
+    //                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/clientesForm.jsp");
+    //                    rd.forward(request, response);
+    //                } else if (action.equals("new")) {
+    ////                    UsuarioDao cDao = new UsuarioDao();
+    //                    Cliente c = new Cliente();
+    //                    c.setNome(request.getParameter("nome"));
+    //                    c.setEmail(request.getParameter("email"));
+    //                    String str = request.getParameter("data");
+    //                    Date data = null;
+    //                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+    //                    data = format.parse(str);
+    //                    String numS = request.getParameter("nr_cliente");
+    //                    int numI = Integer.parseInt(numS);
+    //                    c.setNr_cliente(numI);
+    //                    c.setRua(request.getParameter("rua"));
+    //                    CidadeBean cidade = new CidadeBean();
+    //                    EstadoBean estado = new EstadoBean();
+    ////                    c.setCidade(request.getParameter("cidade"));
+    ////                    c.setUf(request.getParameter("uf"));
+    //                    int city = Integer.parseInt(request.getParameter("cidade"));
+    //                    int est = Integer.parseInt(request.getParameter("estado"));
+    ////                    out.println(city);
+    ////                    out.println(est);                    
+    ////                    cidade.setId(city);
+    ////                    estado.setId(est);
+    ////                    cidade.setEstado(estado);                    
+    ////                    c.setId_cidade(city);
+    //                    c.setId_cidade(city);
+    ////                    out.println(c.getId_cidade());
+    //                    c.setCpf(request.getParameter("cpf"));
+    //                    c.setCep(request.getParameter("cep"));
+    //                    c.setData(data);
+    ////                    out.println(c.getNome());
+    //                    ClientesFacade.inserir(c);
+    //                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/ClientesServlet?action=list");
+    //                    rd.forward(request, response);
+    //                } else {
+    //                    out.print("aff  " + action);
+    //                }
+    //            }
+                    }
+                }
+            }catch(ErroInserindoClienteException e){
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/ClientesServlet?action=cadastro");
+                request.setAttribute("msg", e.getLocalizedMessage());
+                rd.forward(request, response);
             }
         }
     }

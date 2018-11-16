@@ -44,9 +44,12 @@ public class UsuarioFacade {
         return listaResultado;
     }
 
-    public static void inserir(UsuarioBean c) throws SQLException {
+    public static boolean inserir(UsuarioBean c) throws SQLException {
+        boolean verifica;
         UsuarioDao cDao = new UsuarioDao();
-        cDao.adiciona(c);
+        
+        verifica = cDao.adiciona(c);
+        return verifica;
     }
 
     public static List<UsuarioBean> buscarTodosFuncionarios() throws SQLException {

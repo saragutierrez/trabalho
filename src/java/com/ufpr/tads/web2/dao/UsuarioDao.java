@@ -20,9 +20,9 @@ import java.util.List;
  */
 public class UsuarioDao {
 
-    public void adiciona(UsuarioBean usuario) {
+    public boolean adiciona(UsuarioBean usuario) {
         Connection con = ConnectionFactory.getConnection();
-        String sql = ("insert into trabalho.tb_usuario (nome,tipo,cpf,email,tel,rua,nr_casa,complemento,cep,id_cidade,senha) values (?,?,?,?,?,?,?,?,?,?,?)");
+        String sql = ("insert into trabalho.usuario (nome,tipo,cpf,email,tel,rua,nr_casa,complemento,cep,id_cidade,senha) values (?,?,?,?,?,?,?,?,?,?,?)");
         try {
             // prepared statement para inserção
             PreparedStatement stmt = con.prepareStatement(sql);
@@ -42,8 +42,10 @@ public class UsuarioDao {
             stmt.executeUpdate();
             stmt.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getLocalizedMessage());
+            return false;
         }
+        return true;
     }
 
     public List<UsuarioBean> buscarTodosFuncionarios() throws SQLException {
