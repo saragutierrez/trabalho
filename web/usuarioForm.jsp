@@ -198,7 +198,7 @@
                                             </div> 
                                             <!--todo cadastrar se é funcionario ou gerente-->      
                                             <div class="btn-group" data-toggle="buttons">
-                                                <c:if test = "${c.tipo == 'G'}">
+                                                <c:if test = "${loginBean.tipo == 'G'}">
                                                     <label class="btn btn-default active">
                                                         <input type="radio" id="tipo" name="tipo" value="G" checked/> Gerente
                                                     </label>
@@ -206,7 +206,7 @@
                                                         <input type="radio" id="tipo1" name="tipo" value="F" />Funcionario
                                                     </label>
                                                 </c:if>
-                                                <c:if test = "${c.tipo == 'F'}">
+                                                <c:if test = "${loginBean.tipo == 'F'}">
                                                     <label class="btn btn-default active">
                                                         <input type="radio" id="tipo" name="tipo" value="G" checke/> Gerente
                                                     </label>
@@ -221,10 +221,9 @@
                                                     <input required type="text" class="form-control" id="senha" name="senha" value="${form == ("alterar"||"alterarC") ? c.senha : ""}" placeholder="Ex.: senhas">
                                                 </div> 
                                             </c:if>
-
                                             <div class="row">
                                                 <label>UF</label><br>
-                                                <select id="estado" name="estado" required>
+                                                <select id="estado" name="estado" class="form-control" required>
                                                     <c:forEach items="${estados}" var="x">
                                                         <c:if test = "${x.id == c.estado.id}">
                                                             <option value="${x.id}" selected>${x.sigla}</option>
@@ -238,7 +237,7 @@
                                             </div>
                                             <div class="row">
                                                 <label>Cidade:</label><br>
-                                                <select id="cidade" name="cidade" required>
+                                                <select class="form-control" id="cidade" name="cidade" required>
                                                     <c:forEach items="${cidades}" var="x">
                                                         <c:if test = "${x.id == c.cidade.id}">
                                                             <option value="${x.id}" selected>${x.nome}</option>
@@ -255,7 +254,7 @@
                                             <c:if test = "${form == 'alterar'}">
                                                 <input type="submit" id="cadastrar" class="btn btn-primary" value="${form == "alterar" ? "ALTERAR" : "SALVAR"}">
                                             </c:if>
-                                            <c:if test = "${form == 'null'}">
+                                            <c:if test = "${form == null}">
                                                 <input type="submit" id="cadastrar" class="btn btn-primary" value="${form == "alterar" ? "ALTERAR" : "SALVAR"}" disabled>
                                             </c:if>
                                             <c:if test = "${form == 'newC'}">

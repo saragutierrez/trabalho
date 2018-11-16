@@ -199,6 +199,13 @@ public class GerenteServlet extends HttpServlet {
                     c.setId_cidade(city);
                     c.setTipo(request.getParameter("tipo"));
                     c.setSenha(request.getParameter("senha"));
+                    try{
+                        if(c.getSenha()==null){
+                            c.setSenha("123");
+                        }
+                    }catch(NullPointerException e){
+                        c.setSenha("123");
+                    }
                     UsuarioFacade.inserir(c);
                     RequestDispatcher rd = getServletContext().getRequestDispatcher("/GerenteServlet?action=listFuncionarios");
                     rd.forward(request, response);
