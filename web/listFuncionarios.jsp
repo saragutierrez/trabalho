@@ -39,10 +39,6 @@
                             <th scope="col">CPF</th>
                             <th scope="col">EMAIL</th>
                             <th scope="col">TEL</th>
-                            <!--                            <th scope="col">RUA</th>
-                                                        <th scope="col">Nº CASA</th>
-                                                        <th scope="col">COMPLEMENTO</th>
-                                                        <th scope="col">CEP</th>-->
                             <th scope="col">CIDADE</th>
                             <th scope="col">ESTADO</th>
                             <th scope="col"></th>

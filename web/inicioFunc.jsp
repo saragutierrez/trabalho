@@ -39,9 +39,10 @@ TODO Tela de resolucao,Listagem de todos os atendimentos, cad de produto, cad de
                             <th scope="col">data/hora</th>
                             <th scope="col">cliente</th>
                             <th scope="col">situacao</th>
+                            <th scope="col">tipo atendimento</th>
                             <th scope="col">descricao</th>
                             <th scope="col">solucao</th>                            
-                            <th scope="col">produtos</th>
+                            <th scope="col">produtos</th>                            
                             <th scope="col">x</th>
                             <th scope="col">x</th>
                         </tr>
@@ -49,19 +50,26 @@ TODO Tela de resolucao,Listagem de todos os atendimentos, cad de produto, cad de
                     <tbody>                        
                         <c:forEach items="${atendimentos}" var="x" varStatus="theCount">
                             <tr>
-                                <c:if test= "${x.dataHora!= 'G'}">
-
+                                <c:if test= "${temp=='n'}">
+                                    <td><fmt:formatDate value="${x.dataHora}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
                                 </c:if>
-                                <td><fmt:formatDate value="${x.dataHora}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                <c:if test= "${tempo[theCount.index]=='v'}">
+                                    <td style="color: red"><fmt:formatDate value="${x.dataHora}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                </c:if>
+                                <c:if test= "${tempo[theCount.index]=='a'}">
+                                    <td style="color: #999900"><fmt:formatDate value="${x.dataHora}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                </c:if>
+                                <!--<td><fmt:formatDate value="${x.dataHora}" pattern="dd/MM/yyyy HH:mm:ss"/></td>-->
                                 <td>${clientes[theCount.index]}</td>
                                 <td>${x.situacao}</td>
+                                <td>${tipoA[theCount.index]}</td>
                                 <td>${x.descricao}</td>
                                 <td>${x.solucao}</td>
                                 <td>${produtos[theCount.index]}</td>
                                 <c:if test= "${loginBean.tipo != 'G'}">
                                     <td><a href="AtendimentoServlet?action=show&id=${x.id_atendimento}"><button class="btn btn-primary">VER TUDO</button></a></td>
                                 </c:if>
-                                    <c:choose>
+                                <c:choose>
                                     <c:when test =  "${loginBean.tipo == 'F'}">
                                         <c:if test= "${x.situacao == 'aberto'}">
                                             <!--SEABERTO-->  <td><a href="AtendimentoServlet?action=formResolver&id=${x.id_atendimento}"><button class="btn btn-danger">RESOLVER</button></a></td>

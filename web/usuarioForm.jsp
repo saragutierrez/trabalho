@@ -13,7 +13,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Cadastro</title>
+        <title>JSP Page</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
         <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
@@ -135,10 +135,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <c:choose>
-                        <c:when test = "${not empty loginBean.tipo || not empty logB}">                            
-                            <c:if test="${!empty msg}">
-                                <div class="alert alert-danger" role="alert"><h2 style= color:red;text-align:center>${msg}</h2></div>
-                            </c:if>
+                        <c:when test = "${not empty loginBean.tipo || not empty logB}">                          
                             <c:if test = "${form == 'alterar'}">
                                 <form class="form-group" action="GerenteServlet?action=update" method="POST">  
                                     <h1 style="text-align: center; color: red">ALTERAR </h1>
@@ -198,7 +195,7 @@
                                             </div> 
                                             <!--todo cadastrar se é funcionario ou gerente-->      
                                             <div class="btn-group" data-toggle="buttons">
-                                                <c:if test = "${loginBean.tipo == 'G'}">
+                                                <c:if test = "${c.tipo == 'G'}">
                                                     <label class="btn btn-default active">
                                                         <input type="radio" id="tipo" name="tipo" value="G" checked/> Gerente
                                                     </label>
@@ -206,9 +203,9 @@
                                                         <input type="radio" id="tipo1" name="tipo" value="F" />Funcionario
                                                     </label>
                                                 </c:if>
-                                                <c:if test = "${loginBean.tipo == 'F'}">
+                                                <c:if test = "${c.tipo == 'F'}">
                                                     <label class="btn btn-default active">
-                                                        <input type="radio" id="tipo" name="tipo" value="G" checke/> Gerente
+                                                        <input type="radio" id="tipo" name="tipo" value="G"/> Gerente
                                                     </label>
                                                     <label class="btn btn-default">
                                                         <input type="radio" id="tipo1" name="tipo" value="F" checked/>Funcionario
@@ -221,9 +218,10 @@
                                                     <input required type="text" class="form-control" id="senha" name="senha" value="${form == ("alterar"||"alterarC") ? c.senha : ""}" placeholder="Ex.: senhas">
                                                 </div> 
                                             </c:if>
+
                                             <div class="row">
                                                 <label>UF</label><br>
-                                                <select id="estado" name="estado" class="form-control" required>
+                                                 <select id="estado" name="estado" class="form-control" required>
                                                     <c:forEach items="${estados}" var="x">
                                                         <c:if test = "${x.id == c.estado.id}">
                                                             <option value="${x.id}" selected>${x.sigla}</option>
@@ -237,7 +235,7 @@
                                             </div>
                                             <div class="row">
                                                 <label>Cidade:</label><br>
-                                                <select class="form-control" id="cidade" name="cidade" required>
+                                                 <select class="form-control" id="cidade" name="cidade" required>
                                                     <c:forEach items="${cidades}" var="x">
                                                         <c:if test = "${x.id == c.cidade.id}">
                                                             <option value="${x.id}" selected>${x.nome}</option>
