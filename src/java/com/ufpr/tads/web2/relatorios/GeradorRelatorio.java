@@ -7,6 +7,7 @@ package com.ufpr.tads.web2.relatorios;
 
 import com.mysql.jdbc.StringUtils;
 import static com.mysql.jdbc.StringUtils.isNullOrEmpty;
+import com.ufpr.tads.web2.beans.UsuarioBean;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -56,9 +57,9 @@ public class GeradorRelatorio extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         HttpSession session = request.getSession();
-        String nomee = (String) session.getAttribute("nomee");
+        UsuarioBean logB = (UsuarioBean) session.getAttribute("loginBean");
         String action = request.getParameter("action");
-        if (nomee == null || nomee.isEmpty()) {
+        if (logB.getNome() == null || logB.getNome().isEmpty()) {
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
             request.setAttribute("msg", "Usuário deve se autenticar para acessar o sistema");
             rd.forward(request, response);
@@ -66,47 +67,204 @@ public class GeradorRelatorio extends HttpServlet {
             if (isNullOrEmpty(action)) {
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/portal.jsp");
                 rd.forward(request, response);
-            } else if (action.equals("todosCli")) {
-                gerarRelatorioClientes(request, response);
-            } else if (action.equals("todosAtendimentos")) {
-//                Timestamp ini = null, fim = null;
-//                String str1 = request.getParameter("datahoraI");
-//                String str2 = request.getParameter("datahoraF");
-//                SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-//                Date parseDate = format.parse(str1);
-//                ini = new java.sql.Timestamp(parseDate.getTime());
-//                Date parseDate2 = format.parse(str2);
-//                fim = new java.sql.Timestamp(parseDate2.getTime());
+            } else if (action.equals("todosFunc")) {
+                gerarRelatorioFuncionarios(request, response);
 
-                String ini2 = ("02/01/2018 00:10:00");
-//                Date data = format.parse(ini2);
-//                Timestamp time1 = new Timestamp(data.getTime());
-//                System.out.println(time1);
+            } else if (action.equals("prodReclamados")) {
+                gerarRelatorioProdReclamados(request, response);
 
-                String ini3 = ("02/12/2018 00:20:00");
-//                Date data2 = format.parse(ini3);
-//                Timestamp time2 = new Timestamp(data2.getTime());
-//                System.out.println(time2);
-//                gerarRelatorioAtendimentos(request, response, ini2, ini3);
-                gerarRelatorioAtendimentos(ini2, ini3, request, response);
-            } else if (action.equals("todosAtendimentosResolvidos")) {
-                gerarRelatorioAtendimentosResolvidos(request, response);
+            } else if (action.equals("reclamacoes")) {
+                String situacao = request.getParameter("situacao");
+                System.out.println(situacao);
+                gerarRelatorioReclamacoes(request, response, situacao);
+
+            } else if (action.equals("atAbertos")) {
+                String strI = request.getParameter("dataI") + " 00:00:00";
+                String strF = request.getParameter("dataF") + " 23:59:59";
+                System.out.println(strF);
+                gerarRelatorioAtAbertos(request, response, strI, strF);
             }
         } // Fechamento do processRequest
 // Outros métodos escondidos
     } // Fechamento da classe
 
-    public void gerarRelatorioClientes(HttpServletRequest request, HttpServletResponse response) throws MalformedURLException, IOException, ServletException {
+    public void gerarRelatorioFuncionarios(HttpServletRequest request, HttpServletResponse response) throws MalformedURLException, IOException, ServletException {
         Connection con = null;
         try {
 // Conexão com o banco
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/teste",
+                    "jdbc:mysql://localhost:3306/trabalho",
                     "root", "root");
             // Caminho contextualizado do relatório compilado
             String jasper = request.getContextPath()
-                    + "/relatorios/todosClientes.jasper";
+                    + "/funcs.jasper";
+// Host onde o servlet esta executando
+            String host = "http://" + request.getServerName()
+                    + ":" + request.getServerPort();
+// URL para acesso ao relatório
+            URL jasperURL = new URL(host + jasper);
+// Parâmetros do relatório
+            HashMap params = new HashMap();
+// Geração do relatório
+            byte[] bytes = JasperRunManager.runReportToPdf(
+                    jasperURL.openStream(), params, con);
+            if (bytes != null) {
+// A página será mostrada em PDF
+                response.setContentType("application/pdf");
+// Envia o PDF para o Cliente
+                OutputStream ops = response.getOutputStream();
+                ops.write(bytes);
+            }
+        } // Fechamento do try
+        catch (ClassNotFoundException e) {
+            request.setAttribute("mensagem", "Driver BD não encontrado : "
+                    + e.getMessage());
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
+        } catch (SQLException e) {
+            request.setAttribute("mensagem", "Erro de conexão ou query: "
+                    + e.getMessage());
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
+        } catch (JRException e) {
+            request.setAttribute("mensagem", "Erro no Jasper : "
+                    + e.getMessage());
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                }
+
+            }
+        }
+    }
+
+    public void gerarRelatorioReclamacoes(HttpServletRequest request, HttpServletResponse response, String situacao) throws MalformedURLException, IOException, ServletException {
+        Connection con = null;
+        try {
+// Conexão com o banco
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/trabalho",
+                    "root", "root");
+            // Caminho contextualizado do relatório compilado
+            String jasper = request.getContextPath()
+                    + "/reclamacoes.jasper";
+// Host onde o servlet esta executando
+            String host = "http://" + request.getServerName()
+                    + ":" + request.getServerPort();
+// URL para acesso ao relatório
+            URL jasperURL = new URL(host + jasper);
+// Parâmetros do relatório
+            HashMap params = new HashMap();
+            params.put("situacao", situacao);
+// Geração do relatório
+            byte[] bytes = JasperRunManager.runReportToPdf(
+                    jasperURL.openStream(), params, con);
+            if (bytes != null) {
+// A página será mostrada em PDF
+                response.setContentType("application/pdf");
+// Envia o PDF para o Cliente
+                OutputStream ops = response.getOutputStream();
+                ops.write(bytes);
+            }
+        } // Fechamento do try
+        catch (ClassNotFoundException e) {
+            request.setAttribute("mensagem", "Driver BD não encontrado : "
+                    + e.getMessage());
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
+        } catch (SQLException e) {
+            request.setAttribute("mensagem", "Erro de conexão ou query: "
+                    + e.getMessage());
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
+        } catch (JRException e) {
+            request.setAttribute("mensagem", "Erro no Jasper : "
+                    + e.getMessage());
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                }
+
+            }
+        }
+    }
+
+    public void gerarRelatorioAtAbertos(HttpServletRequest request, HttpServletResponse response, String dI, String dF) throws MalformedURLException, IOException, ServletException, ParseException {
+        Timestamp dataI = null;
+        Timestamp dataF = null;
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date parseDateI = format.parse(dI);
+        Date parseDateF = format.parse(dF);
+        dataI = new java.sql.Timestamp(parseDateI.getTime());
+        dataF = new java.sql.Timestamp(parseDateF.getTime());
+        Connection con = null;
+        try {
+// Conexão com o banco
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/trabalho",
+                    "root", "root");
+            // Caminho contextualizado do relatório compilado
+            String jasper = request.getContextPath()
+                    + "/atAbertos.jasper";
+// Host onde o servlet esta executando
+            String host = "http://" + request.getServerName()
+                    + ":" + request.getServerPort();
+// URL para acesso ao relatório
+            URL jasperURL = new URL(host + jasper);
+// Parâmetros do relatório
+            HashMap params = new HashMap();
+            params.put("dataI", dataI);
+            params.put("dataF", dataF);
+// Geração do relatório
+            byte[] bytes = JasperRunManager.runReportToPdf(
+                    jasperURL.openStream(), params, con);
+            if (bytes != null) {
+// A página será mostrada em PDF
+                response.setContentType("application/pdf");
+// Envia o PDF para o Cliente
+                OutputStream ops = response.getOutputStream();
+                ops.write(bytes);
+            }
+        } // Fechamento do try
+        catch (ClassNotFoundException e) {
+            request.setAttribute("mensagem", "Driver BD não encontrado : "
+                    + e.getMessage());
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
+        } catch (SQLException e) {
+            request.setAttribute("mensagem", "Erro de conexão ou query: "
+                    + e.getMessage());
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
+        } catch (JRException e) {
+            request.setAttribute("mensagem", "Erro no Jasper : "
+                    + e.getMessage());
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                }
+
+            }
+        }
+    }
+
+    public void gerarRelatorioProdReclamados(HttpServletRequest request, HttpServletResponse response) throws MalformedURLException, IOException, ServletException {
+        Connection con = null;
+        try {
+// Conexão com o banco
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/trabalho",
+                    "root", "root");
+            // Caminho contextualizado do relatório compilado
+            String jasper = request.getContextPath()
+                    + "/prodReclamados.jasper";
 // Host onde o servlet esta executando
             String host = "http://" + request.getServerName()
                     + ":" + request.getServerPort();
