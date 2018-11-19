@@ -15,6 +15,7 @@ import com.ufpr.tads.web2.facade.UsuarioFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -59,15 +60,26 @@ public class FuncionarioServlet extends HttpServlet {
                 List<Atendimento> atendimentos = AtendimentoFacade.buscarAtendimentosNaoResolvidos();
                 List<String> produtos = new ArrayList<>();
                 List<String> clientes = new ArrayList<>();
+                List<String> tempo = new ArrayList<>();
+                Timestamp dataDeHoje = new Timestamp(System.currentTimeMillis());
                 for (Atendimento a : atendimentos) {
+                    String ms = null;
+                    long i = dataDeHoje.getTime() - AtendimentoFacade.show(a.getId_atendimento()).getDataHora().getTime();
+                    if (i >= 1209600000) {
+                        ms = "v";
+                    } else {
+                        ms = "a";
+                    }
                     String p = AtendimentoFacade.buscarProduto(a.getId_produto()).getNome_produto();
                     String c = UsuarioFacade.show(a.getId_cliente()).getNome();
                     produtos.add(p);
                     clientes.add(c);
+                    tempo.add(ms);
                 }
                 request.setAttribute("atendimentos", atendimentos);//NaoResolvidos
                 request.setAttribute("produtos", produtos);
                 request.setAttribute("clientes", clientes);
+                request.setAttribute("tempo", tempo);
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioFunc.jsp");
                 rd.forward(request, response);
 
