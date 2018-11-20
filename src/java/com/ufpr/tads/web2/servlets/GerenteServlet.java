@@ -13,10 +13,10 @@ import com.ufpr.tads.web2.beans.TipoAtendimento;
 import com.ufpr.tads.web2.beans.UsuarioBean;
 import com.ufpr.tads.web2.facade.AtendimentoFacade;
 import com.ufpr.tads.web2.facade.UsuarioFacade;
+import com.ufpr.tads.web2.exceptions.SessaoNaoEncontradaException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -50,192 +50,162 @@ public class GerenteServlet extends HttpServlet {
             throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            HttpSession session = request.getSession();
-            UsuarioBean logB = (UsuarioBean) session.getAttribute("loginBean");
-            String action = request.getParameter("action");
-            String nome;
             try{
-                nome = logB.getNome();
-            }catch(NullPointerException e){
-                nome = null;
-            }
-            if (nome == null || nome.isEmpty()) {
+                HttpSession session = request.getSession();
+                UsuarioBean logB = (UsuarioBean) session.getAttribute("loginBean");
+                String action = request.getParameter("action");
+                String nomeLog;
+                try{
+                    nomeLog = logB.getNome();
+                }catch(NullPointerException e){
+                    throw new SessaoNaoEncontradaException("Nenhum cadastro efetuado!");
+                }
+                if ((isNullOrEmpty(action)) || action.equals("list")) {
+                    request.setAttribute("totAtendimentos", AtendimentoFacade.list().size());
+                    request.setAttribute("totAtendimentosAbertos", AtendimentoFacade.buscarAtendimentosNaoResolvidos().size());
+                    List<TipoAtendimento> atendimentosT = AtendimentoFacade.buscarTiposAtendimento();
+                    request.setAttribute("atendimentosT", atendimentosT);
+                    List<Integer> tot = new ArrayList<>();
+                    List<Integer> totA = new ArrayList<>();
+                    for (TipoAtendimento a : atendimentosT) {
+                        int totalAberto = AtendimentoFacade.buscarAtendimentosNaoResolvidosPorTipo(a.getId_tipoAt()).size();
+                        int total = AtendimentoFacade.buscarAtendimentosPorTipo(a.getId_tipoAt()).size();
+
+                        totA.add(totalAberto);
+                        tot.add(total);
+                    }
+                    request.setAttribute("tot", tot);
+                    request.setAttribute("totA", totA);
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioGerente.jsp");
+                    rd.forward(request, response);
+                } else if (action.equals("remove")) {
+                    int id = Integer.parseInt(request.getParameter("id"));
+                    if (logB.getId() == id) {
+                        RequestDispatcher rd = getServletContext().getRequestDispatcher("/GerenteServlet?action=listFuncionarios");
+                        request.setAttribute("msg", "PROIBIDO A EXCLUSAO DO USUARIO QUE ESTÁ LOGADO");
+                        rd.forward(request, response);
+                    } else {
+                        UsuarioFacade.remove(id);
+                        RequestDispatcher rd = getServletContext().getRequestDispatcher("/GerenteServlet?action=listFuncionarios");
+                        rd.forward(request, response);
+                    }
+                } else if (action.equals("todosAtendimentosNaoResolvidos")) {
+    //TODO Se o atendimento estiver há mais de uma semana em aberto, deve ser mostrado em vermelho, indicando criticidade.
+
+                    List<Atendimento> atendimentos = AtendimentoFacade.buscarAtendimentosNaoResolvidos();
+                    List<String> produtos = new ArrayList<>();
+                    List<String> clientes = new ArrayList<>();
+                    for (Atendimento a : atendimentos) {
+                        String p = AtendimentoFacade.buscarProduto(a.getId_produto()).getNome_produto();
+                        String c = UsuarioFacade.show(a.getId_cliente()).getNome();
+                        produtos.add(p);
+                        clientes.add(c);
+                    }
+                    request.setAttribute("atendimentos", atendimentos); //NAO RESOLVIDOS
+                    request.setAttribute("produtos", produtos);
+                    request.setAttribute("clientes", clientes);
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioFunc.jsp");
+                    rd.forward(request, response);
+
+                } else if (action.equals("todosAtendimentos")) {
+    //TODO Se o atendimento estiver há mais de uma semana em aberto, deve ser mostrado em vermelho, indicando criticidade.
+                    List<Atendimento> atendimentos = AtendimentoFacade.list();
+                    List<String> produtos = new ArrayList<>();
+                    List<String> clientes = new ArrayList<>();
+                    for (Atendimento a : atendimentos) {
+                        String p = AtendimentoFacade.buscarProduto(a.getId_produto()).getNome_produto();
+                        String c = UsuarioFacade.show(a.getId_cliente()).getNome();
+                        produtos.add(p);
+                        clientes.add(c);
+                    }
+                    request.setAttribute("atendimentos", atendimentos);
+                    request.setAttribute("produtos", produtos);
+                    request.setAttribute("clientes", clientes);
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioFunc.jsp");
+                    rd.forward(request, response);
+
+                } else if (action.equals("formUpdate")) {
+                    int id = Integer.parseInt(request.getParameter("id"));
+                    request.setAttribute("form", "alterar");
+                    UsuarioBean u = UsuarioFacade.show(id);
+                    request.setAttribute("c", u);
+                    List<EstadoBean> estados = UsuarioFacade.buscarEstados();
+                    List<CidadeBean> cidades = UsuarioFacade.buscarCidades(u.getEstado().getId());
+                    request.setAttribute("estados", estados);
+                    request.setAttribute("cidades", cidades);
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/usuarioForm.jsp");
+                    rd.forward(request, response);
+
+                } else if (action.equals("update")) {
+                    UsuarioBean c = new UsuarioBean();
+                    String idS = request.getParameter("id");
+                    int convId = Integer.parseInt(idS.trim());
+                    c.setId(convId);
+                    c.setNome(request.getParameter("nome"));
+                    c.setCpf(request.getParameter("cpf"));
+                    c.setEmail(request.getParameter("email"));
+                    c.setTel(request.getParameter("tel"));
+                    c.setRua(request.getParameter("rua"));
+                    String numS = request.getParameter("nr_cliente");
+                    c.setComplemento(request.getParameter("complemento"));
+                    c.setCep(request.getParameter("cep"));
+                    int numI = Integer.parseInt(numS);
+                    c.setNr_casa(numI);
+                    CidadeBean cidade = new CidadeBean();
+                    EstadoBean estado = new EstadoBean();
+                    int city = Integer.parseInt(request.getParameter("cidade"));
+                    cidade.setEstado(estado);
+                    c.setId_cidade(city);
+                    c.setTipo(request.getParameter("tipo"));
+    //                c.setSenha(request.getParameter("senha"));
+                    UsuarioFacade.update(c);
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/GerenteServlet?action=listFuncionarios");
+                    rd.forward(request, response);
+
+                } else if (action.equals("listFuncionarios")) {
+                    request.setAttribute("lista", UsuarioFacade.buscarTodosFuncionarios());
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/listFuncionarios.jsp");
+                    rd.forward(request, response);
+
+                } else if (action.equals("show")) {
+                    int id = Integer.parseInt(request.getParameter("id"));
+                    request.setAttribute("x", UsuarioFacade.show(id));
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/visualizarFunc.jsp");
+                    rd.forward(request, response);
+
+                } else if (action.equals("formNew")) {
+                    List<EstadoBean> estados = UsuarioFacade.buscarEstados();
+                    request.setAttribute("estados", estados);
+                    request.setAttribute("form", null);
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/usuarioForm.jsp");
+                    rd.forward(request, response);
+
+                } else if (action.equals("new")) {
+                    UsuarioBean c = new UsuarioBean();
+                    c.setNome(request.getParameter("nome"));
+                    c.setCpf(request.getParameter("cpf"));
+                    c.setEmail(request.getParameter("email"));
+                    c.setTel(request.getParameter("tel"));
+                    c.setRua(request.getParameter("rua"));
+                    String numS = request.getParameter("nr_cliente");
+                    c.setComplemento(request.getParameter("complemento"));
+                    c.setCep(request.getParameter("cep"));
+                    int numI = Integer.parseInt(numS);
+                    c.setNr_casa(numI);
+                    CidadeBean cidade = new CidadeBean();
+                    EstadoBean estado = new EstadoBean();
+                    int city = Integer.parseInt(request.getParameter("cidade"));
+                    cidade.setEstado(estado);
+                    c.setId_cidade(city);
+                    c.setTipo(request.getParameter("tipo"));
+                    c.setSenha(request.getParameter("senha"));
+                    UsuarioFacade.inserir(c);
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/GerenteServlet?action=listFuncionarios");
+                    rd.forward(request, response);
+                }
+            }catch(SessaoNaoEncontradaException e){
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
-                request.setAttribute("msg", "Usuário deve se autenticar para acessar o sistema");
-                rd.forward(request, response);
-            }else
-            if ((isNullOrEmpty(action)) || action.equals("list")) {
-                request.setAttribute("totAtendimentos", AtendimentoFacade.list().size());
-                request.setAttribute("totAtendimentosAbertos", AtendimentoFacade.buscarAtendimentosNaoResolvidos().size());
-                List<TipoAtendimento> atendimentosT = AtendimentoFacade.buscarTiposAtendimento();
-                request.setAttribute("atendimentosT", atendimentosT);
-                List<Integer> tot = new ArrayList<>();
-                List<Integer> totA = new ArrayList<>();
-                for (TipoAtendimento a : atendimentosT) {
-                    int totalAberto = AtendimentoFacade.buscarAtendimentosNaoResolvidosPorTipo(a.getId_tipoAt()).size();
-                    int total = AtendimentoFacade.buscarAtendimentosPorTipo(a.getId_tipoAt()).size();
-
-                    totA.add(totalAberto);
-                    tot.add(total);
-                }
-                request.setAttribute("tot", tot);
-                request.setAttribute("totA", totA);
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioGerente.jsp");
-                rd.forward(request, response);
-            } else if (action.equals("remove")) {
-                int id = Integer.parseInt(request.getParameter("id"));
-                if (logB.getId() == id) {
-                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/GerenteServlet?action=listFuncionarios");
-                    request.setAttribute("msg", "PROIBIDO A EXCLUSAO DO USUARIO QUE ESTÁ LOGADO");
-                    rd.forward(request, response);
-                } else {
-                    UsuarioFacade.remove(id);
-                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/GerenteServlet?action=listFuncionarios");
-                    rd.forward(request, response);
-                }
-            } else if (action.equals("todosAtendimentosNaoResolvidos")) {
-//TODO Se o atendimento estiver há mais de uma semana em aberto, deve ser mostrado em vermelho, indicando criticidade.
-
-                List<Atendimento> atendimentos = AtendimentoFacade.buscarAtendimentosNaoResolvidos();
-                List<String> produtos = new ArrayList<>();
-                List<String> clientes = new ArrayList<>();
-                List<String> tipoA = new ArrayList<>();
-                List<String> tempo = new ArrayList<>();
-                Timestamp dataDeHoje = new Timestamp(System.currentTimeMillis());
-                for (Atendimento a : atendimentos) {
-                    String ms = null;
-                    long i = dataDeHoje.getTime() - AtendimentoFacade.show(a.getId_atendimento()).getDataHora().getTime();
-                    if (i >= 1209600000) {
-                        ms = "v";
-                    } else {
-                        ms = "a";
-                    }
-                    String p = AtendimentoFacade.buscarProduto(a.getId_produto()).getNome_produto();
-                    String c = UsuarioFacade.show(a.getId_cliente()).getNome();
-                    String t = AtendimentoFacade.buscarTipoAtendimento(a.getId_tipo_atendimento()).getNome_tipoAt();
-                    produtos.add(p);
-                    clientes.add(c);
-                    tipoA.add(t);
-                    tempo.add(ms);
-                }
-                request.setAttribute("atendimentos", atendimentos); //NAO RESOLVIDOS
-                request.setAttribute("produtos", produtos);
-                request.setAttribute("tipoA", tipoA);
-                request.setAttribute("clientes", clientes);
-                request.setAttribute("tempo", tempo);
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioFunc.jsp");
-                rd.forward(request, response);
-
-            } else if (action.equals("todosAtendimentos")) {
-//TODO Se o atendimento estiver há mais de uma semana em aberto, deve ser mostrado em vermelho, indicando criticidade.
-                List<Atendimento> atendimentos = AtendimentoFacade.list();
-                List<String> produtos = new ArrayList<>();
-                List<String> clientes = new ArrayList<>();
-                List<String> tipoA = new ArrayList<>();
-                List<String> tempo = new ArrayList<>();
-                Timestamp dataDeHoje = new Timestamp(System.currentTimeMillis());
-                for (Atendimento a : atendimentos) {
-                    String ms = null;
-                    long i = dataDeHoje.getTime() - AtendimentoFacade.show(a.getId_atendimento()).getDataHora().getTime();
-                    if (i >= 1209600000) {
-                        ms = "v";
-                    } else {
-                        ms = "a";
-                    }
-                    System.out.println(i);
-                    String p = AtendimentoFacade.buscarProduto(a.getId_produto()).getNome_produto();
-                    String c = UsuarioFacade.show(a.getId_cliente()).getNome();
-                    String t = AtendimentoFacade.buscarTipoAtendimento(a.getId_tipo_atendimento()).getNome_tipoAt();
-                    produtos.add(p);
-                    clientes.add(c);
-                    tipoA.add(t);
-                    tempo.add(ms);
-                }
-                request.setAttribute("atendimentos", atendimentos);
-                request.setAttribute("produtos", produtos);
-                request.setAttribute("clientes", clientes);
-                request.setAttribute("tipoA", tipoA);
-                request.setAttribute("tempo", tempo);
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioFunc.jsp");
-                rd.forward(request, response);
-
-            } else if (action.equals("formUpdate")) {
-                int id = Integer.parseInt(request.getParameter("id"));
-                request.setAttribute("form", "alterar");
-                UsuarioBean u = UsuarioFacade.show(id);
-                request.setAttribute("c", u);
-                List<EstadoBean> estados = UsuarioFacade.buscarEstados();
-                List<CidadeBean> cidades = UsuarioFacade.buscarCidades(u.getEstado().getId());
-                request.setAttribute("estados", estados);
-                request.setAttribute("cidades", cidades);
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/usuarioForm.jsp");
-                rd.forward(request, response);
-
-            } else if (action.equals("update")) {
-                UsuarioBean c = new UsuarioBean();
-                String idS = request.getParameter("id");
-                int convId = Integer.parseInt(idS.trim());
-                c.setId(convId);
-                c.setNome(request.getParameter("nome"));
-                c.setCpf(request.getParameter("cpf"));
-                c.setEmail(request.getParameter("email"));
-                c.setTel(request.getParameter("tel"));
-                c.setRua(request.getParameter("rua"));
-                String numS = request.getParameter("nr_cliente");
-                c.setComplemento(request.getParameter("complemento"));
-                c.setCep(request.getParameter("cep"));
-                int numI = Integer.parseInt(numS);
-                c.setNr_casa(numI);
-                CidadeBean cidade = new CidadeBean();
-                EstadoBean estado = new EstadoBean();
-                int city = Integer.parseInt(request.getParameter("cidade"));
-                cidade.setEstado(estado);
-                c.setId_cidade(city);
-                c.setTipo(request.getParameter("tipo"));
-//                c.setSenha(request.getParameter("senha"));
-                UsuarioFacade.update(c);
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/GerenteServlet?action=listFuncionarios");
-                rd.forward(request, response);
-
-            } else if (action.equals("listFuncionarios")) {
-                request.setAttribute("lista", UsuarioFacade.buscarTodosFuncionarios());
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/listFuncionarios.jsp");
-                rd.forward(request, response);
-
-            } else if (action.equals("show")) {
-                int id = Integer.parseInt(request.getParameter("id"));
-                request.setAttribute("x", UsuarioFacade.show(id));
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/visualizarFunc.jsp");
-                rd.forward(request, response);
-
-            } else if (action.equals("formNew")) {
-                List<EstadoBean> estados = UsuarioFacade.buscarEstados();
-                request.setAttribute("estados", estados);
-                request.setAttribute("form", "newF");
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/usuarioForm.jsp");
-                rd.forward(request, response);
-
-            } else if (action.equals("new")) {
-                UsuarioBean c = new UsuarioBean();
-                c.setNome(request.getParameter("nome"));
-                c.setCpf(request.getParameter("cpf"));
-                c.setEmail(request.getParameter("email"));
-                c.setTel(request.getParameter("tel"));
-                c.setRua(request.getParameter("rua"));
-                String numS = request.getParameter("nr_cliente");
-                c.setComplemento(request.getParameter("complemento"));
-                c.setCep(request.getParameter("cep"));
-                int numI = Integer.parseInt(numS);
-                c.setNr_casa(numI);
-                CidadeBean cidade = new CidadeBean();
-                EstadoBean estado = new EstadoBean();
-                int city = Integer.parseInt(request.getParameter("cidade"));
-                cidade.setEstado(estado);
-                c.setId_cidade(city);
-                c.setTipo(request.getParameter("tipo"));
-                c.setSenha(request.getParameter("senha"));
-                UsuarioFacade.inserir(c);
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/GerenteServlet?action=listFuncionarios");
+                request.setAttribute("msg", e.getLocalizedMessage());
                 rd.forward(request, response);
             }
         }
