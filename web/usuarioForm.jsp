@@ -18,10 +18,9 @@
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
         <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
         <script src="http://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
-
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
-    </head>
-    <script>
+    </head> 
+   <script>
         function CPF() {
             "user_strict";
             function r(r) {
@@ -131,6 +130,12 @@
         });
     </script>
     <body>
+    <navbar>
+    
+    </navbar>
+    <section>
+        
+    </section>
         <div class="container" >
             <div class="row">
                 <div class="col-md-12">
@@ -272,9 +277,14 @@
                                         </jsp:forward>
                                     </c:otherwise>
                                 </c:choose>
-                                </div>
-                                </div>
-                                </div>
-                                </body>
-
-                                </html>
+                </div>
+            </div>
+        </div>
+    
+<footer id="rodape" class="container">
+        <div class="alert alert-success" role="alert" style="text-align: center">                 
+            <h4>Em caso de problemas contactar a administradora: ${configuracao.email}</h4>
+        </div> 
+    </footer>
+</body>
+</html>
