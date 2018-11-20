@@ -55,8 +55,14 @@ public class ClientesServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             HttpSession session = request.getSession();
             UsuarioBean logB = (UsuarioBean) session.getAttribute("loginBean");
+            String nome;
+            try{
+                nome = logB.getNome();
+            }catch(NullPointerException e){
+               nome = null;
+            }
             String action = request.getParameter("action");
-            if ((logB.getNome() == null || logB.getNome().isEmpty()) && !action.equals("cadastro")) {
+            if ((nome == null || nome.isEmpty()) && !(action.equals("cadastro")|| action.equals("new")) ) {
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
                 request.setAttribute("msg", "Usuário deve se autenticar para acessar o sistema");
                 rd.forward(request, response);

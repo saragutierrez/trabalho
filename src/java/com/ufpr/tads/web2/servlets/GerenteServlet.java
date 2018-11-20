@@ -53,7 +53,13 @@ public class GerenteServlet extends HttpServlet {
             HttpSession session = request.getSession();
             UsuarioBean logB = (UsuarioBean) session.getAttribute("loginBean");
             String action = request.getParameter("action");
-            if (logB.getNome() == null || logB.getNome().isEmpty()) {
+            String nome;
+            try{
+                nome = logB.getNome();
+            }catch(NullPointerException e){
+                nome = null;
+            }
+            if (nome == null || nome.isEmpty()) {
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
                 request.setAttribute("msg", "Usuário deve se autenticar para acessar o sistema");
                 rd.forward(request, response);
