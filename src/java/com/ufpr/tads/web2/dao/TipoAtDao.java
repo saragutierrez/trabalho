@@ -35,18 +35,21 @@ public class TipoAtDao {
             }
             return tiposAt;
         } catch (SQLException e) {
+            System.out.println(e.getLocalizedMessage());
             return null;
         } finally {
             if (rs != null) {
                 try {
                     rs.close();
-                } catch (SQLException ex) {
+                } catch (SQLException e) {
+                    System.out.println(e.getLocalizedMessage());
                 }
             }
             if (st != null) {
                 try {
                     st.close();
-                } catch (SQLException ex) {
+                } catch (SQLException e) {
+                    System.out.println(e.getLocalizedMessage());
                 }
             }
         }

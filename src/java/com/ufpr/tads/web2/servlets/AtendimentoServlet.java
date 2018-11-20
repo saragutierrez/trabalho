@@ -116,17 +116,21 @@ public class AtendimentoServlet extends HttpServlet {
                     rd.forward(request, response);
                     
                 }else if (action.equals("formNew")) {
-                    List<Produto> produtos = AtendimentoFacade.buscarProdutos();
-                    List<TipoAtendimento> ta = AtendimentoFacade.buscarTiposAtendimento();
-                    UsuarioBean u = UsuarioFacade.show(logB.getId());
-                    Timestamp dataDeHoje = new Timestamp(System.currentTimeMillis());
-                    String s = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(dataDeHoje);
-                    request.setAttribute("produtos", produtos);
-                    request.setAttribute("dataDeHoje", s);
-                    request.setAttribute("ta", ta);
-                    request.setAttribute("cliente", u);
-                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/atendimento.jsp");
-                    rd.forward(request, response);
+                    try{
+                        List<Produto> produtos = AtendimentoFacade.buscarProdutos();
+                        List<TipoAtendimento> ta = AtendimentoFacade.buscarTiposAtendimento();
+                        UsuarioBean u = UsuarioFacade.show(logB.getId());
+                        Timestamp dataDeHoje = new Timestamp(System.currentTimeMillis());
+                        String s = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(dataDeHoje);
+                        request.setAttribute("produtos", produtos);
+                        request.setAttribute("dataDeHoje", s);
+                        request.setAttribute("ta", ta);
+                        request.setAttribute("cliente", u);
+                        RequestDispatcher rd = getServletContext().getRequestDispatcher("/atendimento.jsp");
+                        rd.forward(request, response);
+                    }catch(Exception e){
+                        System.out.println(e.getLocalizedMessage());
+                    }
                 } else if (action.equals("new")) {
                     Atendimento a = new Atendimento();
                     a.setDescricao(request.getParameter("descricao"));
@@ -145,7 +149,7 @@ public class AtendimentoServlet extends HttpServlet {
                     } catch (ParseException e) {
                     }
                     a.setDataHora(tm);
-                     System.out.println(tm);
+                    System.out.println(tm);
                     AtendimentoFacade.inserir(a);
                     RequestDispatcher rd = getServletContext().getRequestDispatcher("/ClientesServlet?action=list");
                     rd.forward(request, response);
