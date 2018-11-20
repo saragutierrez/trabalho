@@ -257,7 +257,7 @@
                                 </div>
                                 <input type="submit" id="cadastrar" class="btn btn-primary" value="${button}">
                             </form>
-                            <a href="GerenteServlet?action=list" class="btn btn-danger"> CANCELAR </a>
+                            <a href="portal.jsp" class="btn btn-danger"> CANCELAR </a>
                         </c:when>
                         <c:otherwise>
                             <jsp:forward page="index.jsp">

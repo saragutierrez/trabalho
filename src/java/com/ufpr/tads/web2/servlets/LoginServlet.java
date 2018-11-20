@@ -58,7 +58,23 @@ public class LoginServlet extends HttpServlet {
                         rd.forward(request, response);
                     } else {
                         session.setAttribute("loginBean", log);
-                        response.sendRedirect("portal.jsp");
+                        String redirect;
+                        switch(log.getTipo()){
+                            case "C":
+                                redirect = "ClientesServlet";
+                                break;
+                            case "F":
+                                redirect = "FuncionarioServlet";
+                                break;
+                            case "G":
+                                redirect = "GerenteServlet";
+                                break;
+                            default:
+                                redirect = "index.jsp";
+                                break;
+                        }
+                        
+                        response.sendRedirect(redirect);
                     }
                 }
             }catch(UsuarioSenhaInvalidosException e){
