@@ -90,6 +90,7 @@
                     </form>
                     <td><a class="btn btn-primary"  href="GerenteServlet?action=todosAtendimentosNaoResolvidos" role="button">Listagem de todos os atendimentos em Aberto</a></td>   
                     <td><a class="btn btn-primary"  href="GerenteServlet?action=todosAtendimentos" role="button">Listagem de todos os atendimentos</a></td>   
+                    <a href="LogoutServlet"><button class="btn btn-danger">SAIR</button></a>
                 </c:when>
                 <c:otherwise>
                     <jsp:forward page="index.jsp">

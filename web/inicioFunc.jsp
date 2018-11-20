@@ -100,8 +100,8 @@ TODO Tela de resolucao,Listagem de todos os atendimentos, cad de produto, cad de
                 <c:if test= "${loginBean.tipo == 'C'}">
                     <a href="AtendimentoServlet?action=formNew"><button class="btn btn-primary">CRIAR ATENDIMENTO</button></a>
                     <a href="ClientesServlet?action=formUpdate&id=${loginBean.id}"><button class="btn btn-primary">alterar dados cadastrais</button></a>
-                    <a href="LogoutServlet"><button class="btn btn-danger">SAIR</button></a>
                 </c:if>
+                <a href="LogoutServlet"><button class="btn btn-danger">SAIR</button></a>
             </c:when>
             <c:otherwise>
                 <jsp:forward page="index.jsp">
