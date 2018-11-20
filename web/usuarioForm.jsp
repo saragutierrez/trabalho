@@ -212,7 +212,7 @@
                                                     </label>
                                                 </c:if>
                                             </div>           
-                                            <c:if test = "${form == ('newC'|| 'alterarC')}">
+                                            <c:if test = "${form == ('newC'|| 'alterarC' || 'newF')}">
                                                 <div class="row">
                                                     <label for="senha">Senha</label>
                                                     <input required type="text" class="form-control" id="senha" name="senha" value="${form == ("alterar"||"alterarC") ? c.senha : ""}" placeholder="Ex.: senhas">

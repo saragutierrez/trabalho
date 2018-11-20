@@ -205,7 +205,7 @@ public class GerenteServlet extends HttpServlet {
             } else if (action.equals("formNew")) {
                 List<EstadoBean> estados = UsuarioFacade.buscarEstados();
                 request.setAttribute("estados", estados);
-                request.setAttribute("form", null);
+                request.setAttribute("form", "newF");
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/usuarioForm.jsp");
                 rd.forward(request, response);
 
