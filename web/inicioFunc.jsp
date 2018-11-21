@@ -24,16 +24,87 @@ TODO Tela de resolucao,Listagem de todos os atendimentos, cad de produto, cad de
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>cli list</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+         <link rel="stylesheet" type="text/css" href="style/css/style.css">
     </head>
     <body>
-        <h4>TELA COMPARTILHADA POR FUNCIONARIO,GERENTE E CLIENTE <br> 
-            DEPENDE DO PARAMETRO PASSADO ACESSA ATENDIMENTOS Ñ RESOLVIDOS OU RESOLVIDOS<br>
-            FALTA MUDAR A COR PARA VERMELHO QUANDO ABERTO A MAIS DE UMA SEMANA<br>
-        </h4>
-        <c:choose>
+        <c:if test= "${loginBean.tipo == 'F'}"> 
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="#">Atendimentos</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+		  <ul class="navbar-nav mr-auto">
+			<li class="nav-item ">
+			  <a class="nav-link" href="GerenteServlet?action=todosAtendimentos">Listagem de todos os atendimentos</a>
+			</li>
+			<li class="nav-item ">
+			  <a class="nav-link" href="FuncionarioServlet?action=listCat">Gerenciar Categorias</a>
+			</li>
+			<li class="nav-item ">
+			  <a class="nav-link" href="ProdutoServlet?action=list">Gerenciar Produtos</a>
+			</li>
+			<li class="nav-item">
+			  <a class="nav-link" href="FuncionarioServlet?action=list">Voltar</a>
+			</li>
+		  </ul>
+		  <ul class="navbar-nav">
+			<li class="nav-item">
+			  <a class="nav-link" href="LogoutServlet">Sair(${loginBean.nome})</a>
+			</li>
+		  </ul>  
+		</div>
+            </nav>
+        </c:if>
+
+        <c:if test= "${loginBean.tipo == 'G'}">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="#">Atendimentos</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+		  <ul class="navbar-nav mr-auto">
+			<li class="nav-item ">
+			  <a class="nav-link" href="GerenteServlet?action=list">Voltar</a>
+			</li>
+		  </ul>
+		  <ul class="navbar-nav">
+			<li class="nav-item">
+			  <a class="nav-link" href="LogoutServlet">Sair(${loginBean.nome})</a>
+			</li>
+		  </ul>  
+		</div>
+            </nav>
+        </c:if>
+
+        <c:if test= "${loginBean.tipo == 'C'}">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="#">Atendimentos</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+		  <ul class="navbar-nav mr-auto">
+			<li class="nav-item ">
+			  <a class="nav-link" href="AtendimentoServlet?action=formNew">Efetuar atendimento</a>
+			</li>
+			<li class="nav-item">
+			  <a class="nav-link" href="ClientesServlet?action=formUpdate&id=${loginBean.id}">Alterar dados cadastrais de ${loginBean.nome}</a>
+			</li>
+		  </ul>
+		  <ul class="navbar-nav">
+			<li class="nav-item">
+			  <a class="nav-link" href="LogoutServlet">Sair(${loginBean.nome})</a>
+			</li>
+		  </ul>  
+		</div>
+            </nav>
+        </c:if>
+        <section id="atendimentos" class="container-fluid">
+            <c:choose>
             <c:when test = "${not empty loginBean.nome}">
-            <body>
-                <table class="table">
+                <table id="tabela-atendimento" class="table">
                     <thead>
                         <tr>
                             <th scope="col">data/hora</th>
@@ -87,21 +158,6 @@ TODO Tela de resolucao,Listagem de todos os atendimentos, cad de produto, cad de
                         </c:forEach>
                     </tbody>
                 </table>
-                <c:if test= "${loginBean.tipo == 'F'}"> 
-                    <!--//PARA OCULTAR OS BOTOES QUANDO O GERENTE ACESSA ESSA TELA-->
-                    <a href="GerenteServlet?action=todosAtendimentos"><button class="btn btn-primary">Listagem de todos os atendimentos</button></a>
-                    <a href="FuncionarioServlet?action=listCat"><button class="btn btn-primary">Gerenciar Categorias</button></a>
-                    <a href="ProdutoServlet?action=list"><button class="btn btn-primary">Gerenciar Produtos</button></a>
-                    <a href="FuncionarioServlet?action=list"><button class="btn btn-danger">VOLTAR</button></a>
-                </c:if>
-                <c:if test= "${loginBean.tipo == 'G'}">
-                    <a href="GerenteServlet?action=list"><button class="btn btn-danger">VOLTAR</button></a>
-                </c:if>
-                <c:if test= "${loginBean.tipo == 'C'}">
-                    <a href="AtendimentoServlet?action=formNew"><button class="btn btn-primary">CRIAR ATENDIMENTO</button></a>
-                    <a href="ClientesServlet?action=formUpdate&id=${loginBean.id}"><button class="btn btn-primary">alterar dados cadastrais</button></a>
-                </c:if>
-                <a href="LogoutServlet"><button class="btn btn-danger">SAIR</button></a>
             </c:when>
             <c:otherwise>
                 <jsp:forward page="index.jsp">
@@ -109,5 +165,6 @@ TODO Tela de resolucao,Listagem de todos os atendimentos, cad de produto, cad de
                 </jsp:forward>
             </c:otherwise>
         </c:choose>
+        </section>
     </body>
 </html>

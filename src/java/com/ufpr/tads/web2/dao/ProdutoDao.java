@@ -54,6 +54,7 @@ public class ProdutoDao {
             }
             return produtos;
         } catch (SQLException e) {
+            System.out.println(e.getLocalizedMessage());
             return null;
         } finally {
             if (rs != null) {

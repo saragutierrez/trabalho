@@ -16,6 +16,24 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     </head>
     <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="ClientesServlet?action=list">Atendimentos</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav mr-auto">
+                    <li class="nav-item ">
+                     
+                    </li>
+              </ul>
+              <ul class="navbar-nav">
+                    <li class="nav-item">
+                      <a class="nav-link" href="LogoutServlet">Sair(${loginBean.nome})</a>
+                    </li>
+              </ul>  
+            </div>
+	</nav>
         <div class="container" >
             <div class="row">
                 <div class="col-md-12">
@@ -51,18 +69,9 @@
                             </c:forEach>
                         </select>
                     </div>
-                    <div class="row">
-                        <!--<label>CLIENTE = </label><br>-->
-                        <!--<select id="clientes" name="clientes" >-->
-                            <%--<c:forEach items="${clientes}" var="x">--%>       
-                            <input type="hidden" class="form-control" name="${cliente.id}" value="${cliente.nome}">                           
-                            <%--</c:forEach>--%>
-                        <!--</select>-->
+                    <div class="row">   
+                        <input type="hidden" class="form-control" name="${cliente.id}" value="${cliente.nome}">                           
                     </div>
-<!--                    <div class="row">
-                        <label for="res_atendimento">O atendimento foi resolvido ?</label>
-                        <input type="checkbox" id="res_atendimento" name="res_atendimento"/>
-                    </div>-->
                     <input type="submit" class="btn btn-primary" value="SALVAR">
                 </form>
             </c:when>

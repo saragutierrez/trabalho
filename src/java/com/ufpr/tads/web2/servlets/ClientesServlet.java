@@ -102,6 +102,7 @@ public class ClientesServlet extends HttpServlet {
                             produtos.add(p);
                             clientes.add(c);
                         }
+                        request.setAttribute("temp", "n");
                         request.setAttribute("atendimentos", atendimentos);//NaoResolvidos
                         request.setAttribute("produtos", produtos);
                         request.setAttribute("clientes", clientes);
