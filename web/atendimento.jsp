@@ -14,6 +14,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="style/css/style.css">
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -23,9 +24,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav mr-auto">
-                    <li class="nav-item ">
-                     
-                    </li>
+                <li class="nav-item ">
+                </li>
               </ul>
               <ul class="navbar-nav">
                     <li class="nav-item">
@@ -33,47 +33,42 @@
                     </li>
               </ul>  
             </div>
-	</nav>
-        <div class="container" >
-            <div class="row">
-                <div class="col-md-12">
+	</nav>         
         <c:choose>
             <c:when test = "${not empty loginBean.nome}">
-                <form class="form-group" action="AtendimentoServlet?action=new" method="POST">  
-                    <h1 style="text-align: center; color: red">EFETUAR ATENDIMENTO</h1>
-                    <div class="row">
-                        <!--<label for="id">ID</label>-->
-                        <input type="hidden" class="form-control" name="id" value="c.id">
-                    </div>
-                    <div class="row">
-                        <label for="datahora">DATA HORA</label>
-                        <input type="text" class="form-control" name="datahora" readonly="readonly" value="${dataDeHoje}">
-                    </div>
-                    <div class="row">
-                        <label for="descricao">descricao</label>
-                        <input type="text" class="form-control" name="descricao" value="">
-                    </div>                               
-                    <div class="row">
-                        <label>PRODUTOS</label><br>
-                        <select id="produto" name="produto" required>
-                            <c:forEach items="${produtos}" var="x">                            
-                                <option value="${x.id_produto}">${x.nome_produto}</option>                            
-                            </c:forEach>
-                        </select>
-                    </div>
-                    <div class="row">
-                        <label>TIPOS DE ATENDIMENTO</label><br>
-                        <select id="ta" name="ta" required>
-                            <c:forEach items="${ta}" var="x">                            
-                                <option value="${x.id_tipoAt}">${x.nome_tipoAt}</option>                            
-                            </c:forEach>
-                        </select>
-                    </div>
-                    <div class="row">   
-                        <input type="hidden" class="form-control" name="${cliente.id}" value="${cliente.nome}">                           
-                    </div>
-                    <input type="submit" class="btn btn-primary" value="SALVAR">
-                </form>
+                <section id="efetuar_atendimento" class="container-fluid">
+                    <form class="form-group" action="AtendimentoServlet?action=new" method="POST">
+                        <div class="row">
+                            <label for="datahora">DATA HORA</label>
+                            <input type="text" class="form-control" name="datahora" readonly="readonly" value="${dataDeHoje}">
+                        </div>
+                        <div class="row">
+                            <label for="descricao">descricao</label>
+                            <input type="text" class="form-control" name="descricao" value="">
+                        </div>                               
+                        <div class="row">
+                            <div class="col-4">
+                                <label>PRODUTOS</label><br>
+                                <select id="produto" name="produto" class="form-control" required>
+                                    <c:forEach items="${produtos}" var="x">                            
+                                        <option value="${x.id_produto}">${x.nome_produto}</option>                            
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label>TIPOS DE ATENDIMENTO</label><br>
+                                <select id="ta" name="ta" class="form-control" required>
+                                    <c:forEach items="${ta}" var="x">                            
+                                        <option value="${x.id_tipoAt}">${x.nome_tipoAt}</option>                            
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <input type="submit" class="btn btn-primary" value="SALVAR">     
+                            </div>    
+                        </div>
+                    </form>
+                </section>
             </c:when>
             <c:otherwise>
                 <jsp:forward page="index.jsp">
