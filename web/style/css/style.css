@@ -1,3 +1,7 @@
+#botao{
+    margin-top: 4%; 
+}
+
 #login{
     width: 50%;
     margin-top: 5%;
@@ -15,4 +19,8 @@
 #efetuar_atendimento{
     width: 50%;
     margin-top: 5%;
+}
+
+#efetuar_atendimento_combo{
+    margin-top: 5%; 
 }

@@ -61,6 +61,7 @@ public class FuncionarioServlet extends HttpServlet {
                 List<String> produtos = new ArrayList<>();
                 List<String> clientes = new ArrayList<>();
                 List<String> tempo = new ArrayList<>();
+                List<String> tipoA = new ArrayList<>();
                 Timestamp dataDeHoje = new Timestamp(System.currentTimeMillis());
                 for (Atendimento a : atendimentos) {
                     String ms = null;
@@ -75,11 +76,14 @@ public class FuncionarioServlet extends HttpServlet {
                     produtos.add(p);
                     clientes.add(c);
                     tempo.add(ms);
+                    String t = AtendimentoFacade.buscarTipoAtendimento(a.getId_tipo_atendimento()).getNome_tipoAt();
+                        tipoA.add(t);
                 }
                 request.setAttribute("atendimentos", atendimentos);//NaoResolvidos
                 request.setAttribute("produtos", produtos);
                 request.setAttribute("clientes", clientes);
                 request.setAttribute("tempo", tempo);
+                request.setAttribute("tipoA", tipoA);
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioFunc.jsp");
                 rd.forward(request, response);
 

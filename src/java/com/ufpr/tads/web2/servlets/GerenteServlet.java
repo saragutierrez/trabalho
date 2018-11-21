@@ -61,23 +61,27 @@ public class GerenteServlet extends HttpServlet {
                     throw new SessaoNaoEncontradaException("Nenhum cadastro efetuado!");
                 }
                 if ((isNullOrEmpty(action)) || action.equals("list")) {
-                    request.setAttribute("totAtendimentos", AtendimentoFacade.list().size());
-                    request.setAttribute("totAtendimentosAbertos", AtendimentoFacade.buscarAtendimentosNaoResolvidos().size());
-                    List<TipoAtendimento> atendimentosT = AtendimentoFacade.buscarTiposAtendimento();
-                    request.setAttribute("atendimentosT", atendimentosT);
-                    List<Integer> tot = new ArrayList<>();
-                    List<Integer> totA = new ArrayList<>();
-                    for (TipoAtendimento a : atendimentosT) {
-                        int totalAberto = AtendimentoFacade.buscarAtendimentosNaoResolvidosPorTipo(a.getId_tipoAt()).size();
-                        int total = AtendimentoFacade.buscarAtendimentosPorTipo(a.getId_tipoAt()).size();
+                request.setAttribute("totAtendimentos", AtendimentoFacade.list().size());
+                request.setAttribute("totAtendimentosAbertos", AtendimentoFacade.buscarAtendimentosNaoResolvidos().size());
+                List<TipoAtendimento> atendimentosT = AtendimentoFacade.buscarTiposAtendimento();
+                request.setAttribute("atendimentosT", atendimentosT);
+                List<Integer> tot = new ArrayList<>();
+                List<Integer> totA = new ArrayList<>();
+                List<String> tipoA = new ArrayList<>();
+                for (TipoAtendimento a : atendimentosT) {
+                    int totalAberto = AtendimentoFacade.buscarAtendimentosNaoResolvidosPorTipo(a.getId_tipoAt()).size();
+                    int total = AtendimentoFacade.buscarAtendimentosPorTipo(a.getId_tipoAt()).size();
+                    String t = AtendimentoFacade.buscarTipoAtendimento(a.getId_tipoAt()).getNome_tipoAt();
+                    tipoA.add(t);
+                    totA.add(totalAberto);
+                    tot.add(total);
 
-                        totA.add(totalAberto);
-                        tot.add(total);
-                    }
-                    request.setAttribute("tot", tot);
-                    request.setAttribute("totA", totA);
-                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioGerente.jsp");
-                    rd.forward(request, response);
+                }
+                request.setAttribute("tot", tot);
+                request.setAttribute("tipoA", tipoA);
+                request.setAttribute("totA", totA);
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioGerente.jsp");
+                rd.forward(request, response);
                 } else if (action.equals("remove")) {
                     int id = Integer.parseInt(request.getParameter("id"));
                     if (logB.getId() == id) {
@@ -176,7 +180,7 @@ public class GerenteServlet extends HttpServlet {
                 } else if (action.equals("formNew")) {
                     List<EstadoBean> estados = UsuarioFacade.buscarEstados();
                     request.setAttribute("estados", estados);
-                    request.setAttribute("form", null);
+                    request.setAttribute("form", "newF");
                     RequestDispatcher rd = getServletContext().getRequestDispatcher("/usuarioForm.jsp");
                     rd.forward(request, response);
 
