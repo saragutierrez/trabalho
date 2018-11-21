@@ -17,8 +17,8 @@ public class ConnectionFactory {
 
     private static final String Driver = "com.mysql.jdbc.Driver";
     private static final String URL = "jdbc:mysql://localhost:3306/trabalho?useSSL=false";
-    private static final String USER = "root";
-    private static final String PASS = "admin";
+    private static final String USER = "sinep";
+    private static final String PASS = "senha";
 
     public static Connection getConnection() {
         try {

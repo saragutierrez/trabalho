@@ -14,24 +14,49 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="style/css/style.css">
     </head>
-    <body>    
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="ClientesServlet?action=list">Atendimentos</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item ">
+                    <c:if test= "${loginBean.tipo == 'C'}">
+                        <a class="nav-link" href="ClientesServlet?action=list">Voltar</a>
+                    </c:if>
+                    <c:if test= "${loginBean.tipo == 'F'}">
+                        <a class="nav-link" href="FuncionarioServlet?action=list">Voltar</a>
+                    </c:if>
+                </li>
+              </ul>
+              <ul class="navbar-nav">
+                    <li class="nav-item">
+                      <a class="nav-link" href="LogoutServlet">Sair(${loginBean.nome})</a>
+                    </li>
+              </ul>  
+            </div>
+	</nav>       
         <c:choose>
             <c:when test = "${not empty loginBean.nome}"> 
                 <c:choose>
                     <c:when test =  "${loginBean.tipo == 'F'}">
                         <c:if test= "${resolver == 'resolver'}">
-                            <h1 style="text-align: center; color: red">RESOLVER</h1>
+                            <h2 style="text-align: center; color: grey">RESOLVER</h2>
                         </c:if>
                         <c:if test= "${resolver == null}">
-                            <h1 style="text-align: center; color: red">VISUALIZAR DETALHES</h1>
+                            <h2 style="text-align: center; color: grey">VISUALIZAR DETALHES</h2>
                         </c:if>
                     </c:when>
                 </c:choose>
                 <c:if test= "${loginBean.tipo == 'C'}">
-                    <h1 style="text-align: center; color: red">VISUALIZAR DETALHES</h1>
-                </c:if>                
-                <table class="table">
+                    <h2 style="text-align: center; color: grey">VISUALIZAR DETALHES</h2>
+                </c:if>
+                <section id="tabela-atendimento">
+                        <table class="table">
                     <thead>
                         <tr>
                             <th scope="col">data/hora</th>
@@ -53,6 +78,7 @@
                         </tr>              
                     </tbody>
                 </table>
+                </section>
                 <c:choose>
                     <c:when test =  "${loginBean.tipo == 'F'}">
                         <c:if test= "${resolver == 'resolver'}">
@@ -66,14 +92,6 @@
                         </c:if>
                     </c:when>
                 </c:choose>
-                <br/>
-                <br/> 
-                <c:if test= "${loginBean.tipo == 'C'}">
-                    <a href="ClientesServlet?action=list"><button class="btn btn-primary">VOLTAR</button></a>
-                </c:if>
-                <c:if test= "${loginBean.tipo == 'F'}">
-                    <a href="FuncionarioServlet?action=list"><button class="btn btn-primary">VOLTAR</button></a>
-                </c:if>
             </c:when>
             <c:otherwise>
                 <jsp:forward page="index.jsp">

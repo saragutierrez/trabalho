@@ -92,27 +92,27 @@ public class ClientesServlet extends HttpServlet {
                         */
                 } else {
                     if ((isNullOrEmpty(action)) || action.equals("list")) {
-                        System.out.println(logB.getId());
-                        List<Atendimento> atendimentos = AtendimentoFacade.listAtendimentosCli(logB.getId());
-                        List<String> produtos = new ArrayList<>();
-                        List<String> clientes = new ArrayList<>();
-                        List<String> tipoA = new ArrayList<>();
-                        for (Atendimento a : atendimentos) {
-                            String p = AtendimentoFacade.buscarProduto(a.getId_produto()).getNome_produto();
-                            String c = UsuarioFacade.show(a.getId_cliente()).getNome();
-                            produtos.add(p);
-                            clientes.add(c);
-                            String t = AtendimentoFacade.buscarTipoAtendimento(a.getId_tipo_atendimento()).getNome_tipoAt();
-                            tipoA.add(t);
-                        }
-                        request.setAttribute("atendimentos", atendimentos);//NaoResolvidos
-                        request.setAttribute("produtos", produtos);
-                        request.setAttribute("clientes", clientes);
-                        request.setAttribute("tipoA", tipoA);
-                        request.setAttribute("temp", 'n');
-                        request.setAttribute("atendimentos", AtendimentoFacade.listAtendimentosCli(logB.getId()));
-                        RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioFunc.jsp");
-                        rd.forward(request, response);
+                    System.out.println(logB.getId());
+                    List<Atendimento> atendimentos = AtendimentoFacade.listAtendimentosCli(logB.getId());
+                    List<String> produtos = new ArrayList<>();
+                    List<String> clientes = new ArrayList<>();
+                    List<String> tipoA = new ArrayList<>();
+                    for (Atendimento a : atendimentos) {
+                        String p = AtendimentoFacade.buscarProduto(a.getId_produto()).getNome_produto();
+                        String c = UsuarioFacade.show(a.getId_cliente()).getNome();
+                        produtos.add(p);
+                        clientes.add(c);
+                        String t = AtendimentoFacade.buscarTipoAtendimento(a.getId_tipo_atendimento()).getNome_tipoAt();
+                        tipoA.add(t);
+                    }
+                    request.setAttribute("atendimentos", atendimentos);//NaoResolvidos
+                    request.setAttribute("produtos", produtos);
+                    request.setAttribute("clientes", clientes);
+                    request.setAttribute("tipoA", tipoA);
+                    request.setAttribute("temp", 'n');
+                    request.setAttribute("atendimentos", AtendimentoFacade.listAtendimentosCli(logB.getId()));
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/inicioFunc.jsp");
+                    rd.forward(request, response);
 
                     } else if (action.equals("formUpdate")) {
                         int id = Integer.parseInt(request.getParameter("id"));
