@@ -45,8 +45,8 @@
                         <div class="row">
                             <label for="descricao">descricao</label>
                             <input type="text" class="form-control" name="descricao" value="">
-                        </div>                               
-                        <div class="row">
+                        </div>                             
+                        <div id="efetuar_atendimento_combo" class="row">
                             <div class="col-4">
                                 <label>PRODUTOS</label><br>
                                 <select id="produto" name="produto" class="form-control" required>
@@ -63,7 +63,7 @@
                                     </c:forEach>
                                 </select>
                             </div>
-                            <div class="col-4">
+                            <div id="botao" class="col-4">
                                 <input type="submit" class="btn btn-primary" value="SALVAR">     
                             </div>    
                         </div>
